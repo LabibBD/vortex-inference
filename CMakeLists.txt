@@ -87,10 +87,13 @@ add_library(
     vortex_core
     src/tensor.cpp
     src/device_buffer.cpp
+    src/matmul_cublas.cpp
     kernels/elementwise.cu
     kernels/activations.cu
     kernels/reductions.cu
     kernels/softmax.cu
+    kernels/matmul_naive.cu
+    kernels/matmul_tiled.cu
 )
 
 target_include_directories(
@@ -220,4 +223,48 @@ target_link_libraries(
     vortex_activation_benchmark
     PRIVATE
     vortex_core
+)
+
+add_executable(
+    vortex_matmul_test
+    tests/matmul_test.cpp
+)
+
+target_link_libraries(
+    vortex_matmul_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME matmul
+    COMMAND vortex_matmul_test
+)
+
+add_executable(
+    vortex_matmul_benchmark
+    benchmarks/matmul_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_matmul_benchmark
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_matmul_profile
+    benchmarks/matmul_profile.cpp
+)
+
+target_link_libraries(
+    vortex_matmul_profile
+    PRIVATE
+    vortex_core
+)
+
+target_link_libraries(
+    vortex_core
+    PUBLIC
+    CUDA::cublas
 )
