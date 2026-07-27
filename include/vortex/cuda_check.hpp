@@ -21,3 +21,8 @@
         CUDA_CHECK(cudaGetLastError());                                    \
         CUDA_CHECK(cudaDeviceSynchronize());                               \
     } while (0)
+
+#define CUDA_KERNEL_LAUNCH_CHECK()                              \
+    do {                                                        \
+        CUDA_CHECK(cudaGetLastError());                         \
+    } while (0)

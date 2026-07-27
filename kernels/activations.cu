@@ -353,4 +353,61 @@ void gelu_fp16(
     CUDA_KERNEL_CHECK();
 }
 
+
+void relu_async(
+    const Tensor& input,
+    Tensor& output,
+    cudaStream_t stream
+) {
+    validate_unary_fp32(
+        input,
+        output
+    );
+
+    relu_kernel<<<
+        block_count(input.numel()),
+        THREADS_PER_BLOCK,
+        0,
+        stream
+    >>>(
+        static_cast<const float*>(
+            input.data()
+        ),
+        static_cast<float*>(
+            output.data()
+        ),
+        input.numel()
+    );
+
+    CUDA_KERNEL_LAUNCH_CHECK();
+}
+
+void gelu_async(
+    const Tensor& input,
+    Tensor& output,
+    cudaStream_t stream
+) {
+    validate_unary_fp32(
+        input,
+        output
+    );
+
+    gelu_kernel<<<
+        block_count(input.numel()),
+        THREADS_PER_BLOCK,
+        0,
+        stream
+    >>>(
+        static_cast<const float*>(
+            input.data()
+        ),
+        static_cast<float*>(
+            output.data()
+        ),
+        input.numel()
+    );
+
+    CUDA_KERNEL_LAUNCH_CHECK();
+}
+
 } // namespace vortex::ops

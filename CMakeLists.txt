@@ -87,6 +87,7 @@ add_library(
     vortex_core
     src/tensor.cpp
     src/device_buffer.cpp
+    src/cuda_stream.cpp
     src/memory_pool.cpp
     graph/graph.cpp
     graph/lifetime.cpp
@@ -506,3 +507,30 @@ add_test(
     COMMAND vortex_graph_fusion_test
 )
 
+add_executable(
+    vortex_cuda_stream_test
+    tests/cuda_stream_test.cpp
+)
+
+target_link_libraries(
+    vortex_cuda_stream_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME cuda_stream
+    COMMAND vortex_cuda_stream_test
+)
+
+
+add_executable(
+    vortex_stream_benchmark
+    benchmarks/stream_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_stream_benchmark
+    PRIVATE
+    vortex_core
+)

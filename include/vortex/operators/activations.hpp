@@ -2,6 +2,8 @@
 
 #include "vortex/tensor.hpp"
 
+#include <cuda_runtime.h>
+
 namespace vortex::ops {
 
 void relu(
@@ -28,6 +30,19 @@ void relu_fp16(
 void gelu_fp16(
     const Tensor& input,
     Tensor& output
+);
+
+
+void relu_async(
+    const Tensor& input,
+    Tensor& output,
+    cudaStream_t stream
+);
+
+void gelu_async(
+    const Tensor& input,
+    Tensor& output,
+    cudaStream_t stream
 );
 
 } // namespace vortex::ops
