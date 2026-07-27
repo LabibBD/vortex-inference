@@ -1,5 +1,7 @@
 #include "vortex/device_buffer.hpp"
+
 #include "vortex/cuda_check.hpp"
+#include "vortex/memory_pool.hpp"
 
 #include <cuda_runtime.h>
 
@@ -32,7 +34,6 @@ DeviceBuffer&
 DeviceBuffer::operator=(
     DeviceBuffer&& other
 ) noexcept {
-
     if (this != &other) {
         release();
 
@@ -55,15 +56,13 @@ void DeviceBuffer::allocate(
         );
     }
 
-    // Avoid silently leaking an existing allocation.
+    // Return any currently owned block to the pool.
     release();
 
-    CUDA_CHECK(
-        cudaMalloc(
-            &data_,
+    data_ =
+        MemoryPool::global().acquire(
             bytes
-        )
-    );
+        );
 
     size_ = bytes;
 }
@@ -74,7 +73,12 @@ void DeviceBuffer::release() noexcept {
         return;
     }
 
-    cudaFree(data_);
+    // Do NOT cudaFree here.
+    // The block becomes reusable by another Tensor.
+    MemoryPool::global().release(
+        data_,
+        size_
+    );
 
     data_ = nullptr;
     size_ = 0;

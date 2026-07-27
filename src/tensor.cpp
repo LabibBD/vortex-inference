@@ -146,6 +146,9 @@ std::size_t Tensor::element_size(
     switch (dtype) {
         case DataType::Float32:
             return sizeof(float);
+
+        case DataType::Float16:
+            return 2;
     }
 
     throw std::runtime_error(

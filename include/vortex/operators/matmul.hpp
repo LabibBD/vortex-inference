@@ -34,4 +34,11 @@ void matmul_cublas(
     Tensor& output
 );
 
+
+void matmul_cublas_fp16(
+    const Tensor& a,
+    const Tensor& b,
+    Tensor& output
+);
+
 } // namespace vortex::ops

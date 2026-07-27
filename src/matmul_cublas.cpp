@@ -4,6 +4,7 @@
 #include "vortex/cuda_check.hpp"
 
 #include <cublas_v2.h>
+#include <cuda_fp16.h>
 #include <cuda_runtime.h>
 
 #include <stdexcept>
@@ -166,6 +167,114 @@ void matmul_cublas(
                 output.data()
             ),
             n
+        )
+    );
+
+    CUDA_CHECK(
+        cudaDeviceSynchronize()
+    );
+}
+
+
+void matmul_cublas_fp16(
+    const Tensor& a,
+    const Tensor& b,
+    Tensor& output
+) {
+    if (
+        a.device() != Device::CUDA ||
+        b.device() != Device::CUDA ||
+        output.device() != Device::CUDA
+    ) {
+        throw std::invalid_argument(
+            "FP16 cuBLAS MatMul requires CUDA tensors"
+        );
+    }
+
+    if (
+        a.dtype() != DataType::Float16 ||
+        b.dtype() != DataType::Float16 ||
+        output.dtype() != DataType::Float16
+    ) {
+        throw std::invalid_argument(
+            "FP16 cuBLAS MatMul requires FP16 tensors"
+        );
+    }
+
+    if (
+        a.shape().size() != 2 ||
+        b.shape().size() != 2 ||
+        output.shape().size() != 2
+    ) {
+        throw std::invalid_argument(
+            "FP16 MatMul requires 2D tensors"
+        );
+    }
+
+    if (
+        a.shape()[1] != b.shape()[0] ||
+        output.shape()[0] != a.shape()[0] ||
+        output.shape()[1] != b.shape()[1]
+    ) {
+        throw std::invalid_argument(
+            "FP16 MatMul dimensions are incompatible"
+        );
+    }
+
+    const int m =
+        static_cast<int>(a.shape()[0]);
+
+    const int k =
+        static_cast<int>(a.shape()[1]);
+
+    const int n =
+        static_cast<int>(b.shape()[1]);
+
+    const __half alpha =
+        __float2half(1.0f);
+
+    const __half beta =
+        __float2half(0.0f);
+
+    /*
+     * VORTEX uses row-major matrices.
+     * Classic cuBLAS uses column-major semantics.
+     *
+     * C = A * B
+     *
+     * is therefore evaluated as:
+     *
+     * C^T = B^T * A^T
+     */
+    CUBLAS_CHECK(
+        cublasGemmEx(
+            get_handle(),
+
+            CUBLAS_OP_N,
+            CUBLAS_OP_N,
+
+            n,
+            m,
+            k,
+
+            &alpha,
+
+            b.data(),
+            CUDA_R_16F,
+            n,
+
+            a.data(),
+            CUDA_R_16F,
+            k,
+
+            &beta,
+
+            output.data(),
+            CUDA_R_16F,
+            n,
+
+            CUBLAS_COMPUTE_16F,
+            CUBLAS_GEMM_DEFAULT_TENSOR_OP
         )
     );
 

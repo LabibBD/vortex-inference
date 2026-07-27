@@ -87,6 +87,7 @@ add_library(
     vortex_core
     src/tensor.cpp
     src/device_buffer.cpp
+    src/memory_pool.cpp
     src/matmul_cublas.cpp
     kernels/elementwise.cu
     kernels/activations.cu
@@ -96,6 +97,7 @@ add_library(
     kernels/matmul_tiled.cu
     kernels/linear.cu
     kernels/layernorm.cu
+    kernels/cast.cu
 )
 
 target_include_directories(
@@ -304,3 +306,105 @@ add_test(
 )
 
 
+
+add_executable(
+    vortex_fp16_test
+    tests/fp16_test.cpp
+)
+
+target_link_libraries(
+    vortex_fp16_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME fp16
+    COMMAND vortex_fp16_test
+)
+
+add_executable(
+    vortex_fp16_activation_test
+    tests/fp16_activation_test.cpp
+)
+
+target_link_libraries(
+    vortex_fp16_activation_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME fp16_activations
+    COMMAND vortex_fp16_activation_test
+)
+
+add_executable(
+    vortex_fp16_matmul_test
+    tests/fp16_matmul_test.cpp
+)
+
+target_link_libraries(
+    vortex_fp16_matmul_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME fp16_matmul
+    COMMAND vortex_fp16_matmul_test
+)
+
+add_executable(
+    vortex_fp16_gemm_benchmark
+    benchmarks/fp16_gemm_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_fp16_gemm_benchmark
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_memory_pool_test
+    tests/memory_pool_test.cpp
+)
+
+target_link_libraries(
+    vortex_memory_pool_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME memory_pool
+    COMMAND vortex_memory_pool_test
+)
+
+add_executable(
+    vortex_memory_pool_integration_test
+    tests/memory_pool_integration_test.cpp
+)
+
+target_link_libraries(
+    vortex_memory_pool_integration_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME memory_pool_integration
+    COMMAND vortex_memory_pool_integration_test
+)
+
+add_executable(
+    vortex_memory_pool_benchmark
+    benchmarks/memory_pool_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_memory_pool_benchmark
+    PRIVATE
+    vortex_core
+)

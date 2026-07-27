@@ -9,7 +9,8 @@
 namespace vortex {
 
 enum class DataType {
-    Float32
+    Float32,
+    Float16
 };
 
 enum class Device {
