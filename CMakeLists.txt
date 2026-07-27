@@ -94,6 +94,8 @@ add_library(
     kernels/softmax.cu
     kernels/matmul_naive.cu
     kernels/matmul_tiled.cu
+    kernels/linear.cu
+    kernels/layernorm.cu
 )
 
 target_include_directories(
@@ -268,3 +270,37 @@ target_link_libraries(
     PUBLIC
     CUDA::cublas
 )
+
+add_executable(
+    vortex_linear_test
+    tests/linear_test.cpp
+)
+
+target_link_libraries(
+    vortex_linear_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME linear
+    COMMAND vortex_linear_test
+)
+
+add_executable(
+    vortex_layernorm_test
+    tests/layernorm_test.cpp
+)
+
+target_link_libraries(
+    vortex_layernorm_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME layernorm
+    COMMAND vortex_layernorm_test
+)
+
+
