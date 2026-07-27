@@ -89,6 +89,7 @@ add_library(
     src/device_buffer.cpp
     src/memory_pool.cpp
     graph/graph.cpp
+    runtime/graph_executor.cpp
     src/matmul_cublas.cpp
     kernels/elementwise.cu
     kernels/activations.cu
@@ -425,3 +426,20 @@ add_test(
     NAME graph
     COMMAND vortex_graph_test
 )
+
+add_executable(
+    vortex_graph_executor_test
+    tests/graph_executor_test.cpp
+)
+
+target_link_libraries(
+    vortex_graph_executor_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME graph_executor
+    COMMAND vortex_graph_executor_test
+)
+

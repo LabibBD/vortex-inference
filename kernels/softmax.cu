@@ -1,10 +1,9 @@
 #include "vortex/operators/softmax.hpp"
-
 #include "vortex/cuda_check.hpp"
-#include "vortex/operators/reductions.hpp"
 
 #include <cuda_runtime.h>
 
+#include <cfloat>
 #include <cstddef>
 #include <stdexcept>
 
@@ -12,7 +11,7 @@ namespace vortex::ops {
 
 namespace {
 
-constexpr int THREADS_PER_BLOCK = 256;
+constexpr int THREADS = 256;
 
 void validate_softmax(
     const Tensor& input,
@@ -23,7 +22,7 @@ void validate_softmax(
         output.device() != Device::CUDA
     ) {
         throw std::invalid_argument(
-            "VORTEX Softmax requires CUDA tensors"
+            "Softmax requires CUDA tensors"
         );
     }
 
@@ -38,60 +37,142 @@ void validate_softmax(
 
     if (input.shape() != output.shape()) {
         throw std::invalid_argument(
-            "Softmax input and output shapes must match"
+            "Softmax input/output shapes must match"
         );
     }
 
-    if (input.shape().size() != 1) {
+    if (
+        input.shape().size() != 1 &&
+        input.shape().size() != 2
+    ) {
         throw std::invalid_argument(
-            "Current Softmax implementation supports 1D tensors only"
+            "Softmax currently supports 1D or 2D tensors"
         );
     }
 }
 
-int block_count(
-    std::size_t n
-) {
-    return static_cast<int>(
-        (n + THREADS_PER_BLOCK - 1) /
-        THREADS_PER_BLOCK
-    );
-}
-
-__global__ void exp_shift_kernel(
+__global__ void rowwise_softmax_kernel(
     const float* input,
-    const float* maximum,
     float* output,
-    std::size_t n
+    int rows,
+    int columns
 ) {
-    const std::size_t i =
-        static_cast<std::size_t>(blockIdx.x) *
-        blockDim.x +
+    extern __shared__ float shared[];
+
+    const int row =
+        blockIdx.x;
+
+    const int tid =
         threadIdx.x;
 
-    if (i < n) {
-        output[i] =
-            expf(
-                input[i] - maximum[0]
+    if (row >= rows) {
+        return;
+    }
+
+    const float* row_input =
+        input + row * columns;
+
+    float* row_output =
+        output + row * columns;
+
+    // ==================================================
+    // Row maximum
+    // ==================================================
+
+    float local_max =
+        -FLT_MAX;
+
+    for (
+        int col = tid;
+        col < columns;
+        col += blockDim.x
+    ) {
+        local_max =
+            fmaxf(
+                local_max,
+                row_input[col]
             );
     }
-}
 
-__global__ void normalize_kernel(
-    const float* exponentials,
-    const float* sum,
-    float* output,
-    std::size_t n
-) {
-    const std::size_t i =
-        static_cast<std::size_t>(blockIdx.x) *
-        blockDim.x +
-        threadIdx.x;
+    shared[tid] =
+        local_max;
 
-    if (i < n) {
-        output[i] =
-            exponentials[i] /
-            sum[0];
+    __syncthreads();
+
+    for (
+        int stride = blockDim.x / 2;
+        stride > 0;
+        stride >>= 1
+    ) {
+        if (tid < stride) {
+            shared[tid] =
+                fmaxf(
+                    shared[tid],
+                    shared[tid + stride]
+                );
+        }
+
+        __syncthreads();
+    }
+
+    const float row_max =
+        shared[0];
+
+    // ==================================================
+    // exp(x - max) sum
+    // ==================================================
+
+    float local_sum =
+        0.0f;
+
+    for (
+        int col = tid;
+        col < columns;
+        col += blockDim.x
+    ) {
+        local_sum +=
+            expf(
+                row_input[col] -
+                row_max
+            );
+    }
+
+    shared[tid] =
+        local_sum;
+
+    __syncthreads();
+
+    for (
+        int stride = blockDim.x / 2;
+        stride > 0;
+        stride >>= 1
+    ) {
+        if (tid < stride) {
+            shared[tid] +=
+                shared[tid + stride];
+        }
+
+        __syncthreads();
+    }
+
+    const float inverse_sum =
+        1.0f / shared[0];
+
+    // ==================================================
+    // Normalize
+    // ==================================================
+
+    for (
+        int col = tid;
+        col < columns;
+        col += blockDim.x
+    ) {
+        row_output[col] =
+            expf(
+                row_input[col] -
+                row_max
+            ) *
+            inverse_sum;
     }
 }
 
@@ -106,77 +187,39 @@ void softmax(
         output
     );
 
-    const std::size_t n =
-        input.numel();
+    int rows = 1;
+    int columns = 0;
 
-    Tensor maximum(
-        {1},
-        DataType::Float32,
-        Device::CUDA
-    );
+    if (input.shape().size() == 1) {
+        columns =
+            static_cast<int>(
+                input.shape()[0]
+            );
+    } else {
+        rows =
+            static_cast<int>(
+                input.shape()[0]
+            );
 
-    Tensor exponentials(
-        input.shape(),
-        DataType::Float32,
-        Device::CUDA
-    );
+        columns =
+            static_cast<int>(
+                input.shape()[1]
+            );
+    }
 
-    Tensor exponential_sum(
-        {1},
-        DataType::Float32,
-        Device::CUDA
-    );
-
-    // Step 1:
-    // Find max(x) for numerical stability.
-    reduce_max(
-        input,
-        maximum
-    );
-
-    // Step 2:
-    // exp(x - max(x))
-    exp_shift_kernel<<<
-        block_count(n),
-        THREADS_PER_BLOCK
+    rowwise_softmax_kernel<<<
+        rows,
+        THREADS,
+        THREADS * sizeof(float)
     >>>(
         static_cast<const float*>(
             input.data()
         ),
-        static_cast<const float*>(
-            maximum.data()
-        ),
-        static_cast<float*>(
-            exponentials.data()
-        ),
-        n
-    );
-
-    CUDA_KERNEL_CHECK();
-
-    // Step 3:
-    // Sum all exponentials.
-    reduce_sum(
-        exponentials,
-        exponential_sum
-    );
-
-    // Step 4:
-    // Divide each exponential by the sum.
-    normalize_kernel<<<
-        block_count(n),
-        THREADS_PER_BLOCK
-    >>>(
-        static_cast<const float*>(
-            exponentials.data()
-        ),
-        static_cast<const float*>(
-            exponential_sum.data()
-        ),
         static_cast<float*>(
             output.data()
         ),
-        n
+        rows,
+        columns
     );
 
     CUDA_KERNEL_CHECK();
