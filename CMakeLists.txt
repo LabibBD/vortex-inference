@@ -86,6 +86,11 @@ find_package(CUDAToolkit REQUIRED)
 add_library(
     vortex_core
     src/tensor.cpp
+    src/device_buffer.cpp
+    kernels/elementwise.cu
+    kernels/activations.cu
+    kernels/reductions.cu
+    kernels/softmax.cu
 )
 
 target_include_directories(
@@ -109,4 +114,95 @@ target_link_libraries(
     vortex_tensor_test
     PRIVATE
     vortex_core
+)
+
+add_executable(
+    vortex_device_buffer_test
+    tests/device_buffer_test.cpp
+)
+
+target_link_libraries(
+    vortex_device_buffer_test
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_elementwise_test
+    tests/elementwise_test.cpp
+)
+
+target_link_libraries(
+    vortex_elementwise_test
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_activation_test
+    tests/activation_test.cpp
+)
+
+target_link_libraries(
+    vortex_activation_test
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_reduction_test
+    tests/reduction_test.cpp
+)
+
+target_link_libraries(
+    vortex_reduction_test
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_softmax_test
+    tests/softmax_test.cpp
+)
+
+target_link_libraries(
+    vortex_softmax_test
+    PRIVATE
+    vortex_core
+)
+
+# ============================================================
+# Automated Test Suite
+# ============================================================
+
+enable_testing()
+
+add_test(
+    NAME tensor
+    COMMAND vortex_tensor_test
+)
+
+add_test(
+    NAME device_buffer
+    COMMAND vortex_device_buffer_test
+)
+
+add_test(
+    NAME elementwise
+    COMMAND vortex_elementwise_test
+)
+
+add_test(
+    NAME activations
+    COMMAND vortex_activation_test
+)
+
+add_test(
+    NAME reductions
+    COMMAND vortex_reduction_test
+)
+
+add_test(
+    NAME softmax
+    COMMAND vortex_softmax_test
 )

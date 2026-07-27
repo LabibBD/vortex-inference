@@ -1,6 +1,9 @@
 #pragma once
 
+#include "vortex/device_buffer.hpp"
+
 #include <cstddef>
+#include <memory>
 #include <vector>
 
 namespace vortex {
@@ -22,15 +25,13 @@ public:
         Device device
     );
 
-    ~Tensor();
+    ~Tensor() = default;
 
-    // Do not allow copying of owned memory.
     Tensor(const Tensor&) = delete;
     Tensor& operator=(const Tensor&) = delete;
 
-    // Allow ownership to be transferred safely.
-    Tensor(Tensor&& other) noexcept;
-    Tensor& operator=(Tensor&& other) noexcept;
+    Tensor(Tensor&&) noexcept = default;
+    Tensor& operator=(Tensor&&) noexcept = default;
 
     const std::vector<std::size_t>& shape() const noexcept;
 
@@ -54,9 +55,6 @@ public:
     ) const;
 
 private:
-    void allocate();
-    void release() noexcept;
-
     static std::size_t element_size(DataType dtype);
 
     std::vector<std::size_t> shape_;
@@ -67,7 +65,8 @@ private:
     std::size_t numel_{0};
     std::size_t bytes_{0};
 
-    void* data_{nullptr};
+    std::unique_ptr<std::byte[]> cpu_data_;
+    DeviceBuffer device_buffer_;
 };
 
 } // namespace vortex

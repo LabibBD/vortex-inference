@@ -1,11 +1,6 @@
 #include "vortex/tensor.hpp"
-#include "vortex/cuda_check.hpp"
 
-#include <cuda_runtime.h>
-
-#include <cstdlib>
 #include <cstring>
-#include <new>
 #include <stdexcept>
 #include <utility>
 
@@ -40,46 +35,12 @@ Tensor::Tensor(
 
     bytes_ = numel_ * element_size(dtype_);
 
-    allocate();
-}
-
-Tensor::~Tensor() {
-    release();
-}
-
-Tensor::Tensor(Tensor&& other) noexcept
-    : shape_(std::move(other.shape_)),
-      dtype_(other.dtype_),
-      device_(other.device_),
-      numel_(other.numel_),
-      bytes_(other.bytes_),
-      data_(other.data_) {
-
-    // The moved-from Tensor no longer owns the memory.
-    other.numel_ = 0;
-    other.bytes_ = 0;
-    other.data_ = nullptr;
-}
-
-Tensor& Tensor::operator=(Tensor&& other) noexcept {
-    if (this != &other) {
-        // Release anything this Tensor already owns.
-        release();
-
-        shape_ = std::move(other.shape_);
-        dtype_ = other.dtype_;
-        device_ = other.device_;
-        numel_ = other.numel_;
-        bytes_ = other.bytes_;
-        data_ = other.data_;
-
-        // Transfer ownership away from other.
-        other.numel_ = 0;
-        other.bytes_ = 0;
-        other.data_ = nullptr;
+    if (device_ == Device::CUDA) {
+        device_buffer_.allocate(bytes_);
+    } else {
+        cpu_data_ =
+            std::make_unique<std::byte[]>(bytes_);
     }
-
-    return *this;
 }
 
 const std::vector<std::size_t>&
@@ -104,11 +65,19 @@ std::size_t Tensor::bytes() const noexcept {
 }
 
 void* Tensor::data() noexcept {
-    return data_;
+    if (device_ == Device::CUDA) {
+        return device_buffer_.data();
+    }
+
+    return cpu_data_.get();
 }
 
 const void* Tensor::data() const noexcept {
-    return data_;
+    if (device_ == Device::CUDA) {
+        return device_buffer_.data();
+    }
+
+    return cpu_data_.get();
 }
 
 void Tensor::copy_from_host(
@@ -128,15 +97,13 @@ void Tensor::copy_from_host(
     }
 
     if (device_ == Device::CUDA) {
-        CUDA_CHECK(cudaMemcpy(
-            data_,
+        device_buffer_.copy_from_host(
             source,
-            bytes,
-            cudaMemcpyHostToDevice
-        ));
+            bytes
+        );
     } else {
         std::memcpy(
-            data_,
+            cpu_data_.get(),
             source,
             bytes
         );
@@ -160,52 +127,17 @@ void Tensor::copy_to_host(
     }
 
     if (device_ == Device::CUDA) {
-        CUDA_CHECK(cudaMemcpy(
+        device_buffer_.copy_to_host(
             destination,
-            data_,
-            bytes,
-            cudaMemcpyDeviceToHost
-        ));
+            bytes
+        );
     } else {
         std::memcpy(
             destination,
-            data_,
+            cpu_data_.get(),
             bytes
         );
     }
-}
-
-void Tensor::allocate() {
-    if (bytes_ == 0) {
-        return;
-    }
-
-    if (device_ == Device::CUDA) {
-        CUDA_CHECK(cudaMalloc(
-            &data_,
-            bytes_
-        ));
-    } else {
-        data_ = std::malloc(bytes_);
-
-        if (data_ == nullptr) {
-            throw std::bad_alloc();
-        }
-    }
-}
-
-void Tensor::release() noexcept {
-    if (data_ == nullptr) {
-        return;
-    }
-
-    if (device_ == Device::CUDA) {
-        cudaFree(data_);
-    } else {
-        std::free(data_);
-    }
-
-    data_ = nullptr;
 }
 
 std::size_t Tensor::element_size(
