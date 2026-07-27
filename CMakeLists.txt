@@ -206,3 +206,18 @@ add_test(
     NAME softmax
     COMMAND vortex_softmax_test
 )
+
+# ============================================================
+# Benchmarks
+# ============================================================
+
+add_executable(
+    vortex_activation_benchmark
+    benchmarks/activation_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_activation_benchmark
+    PRIVATE
+    vortex_core
+)
