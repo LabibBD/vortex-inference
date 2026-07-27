@@ -76,3 +76,37 @@ target_compile_options(
     PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo>
 )
+
+# ============================================================
+# VORTEX Core Runtime
+# ============================================================
+
+find_package(CUDAToolkit REQUIRED)
+
+add_library(
+    vortex_core
+    src/tensor.cpp
+)
+
+target_include_directories(
+    vortex_core
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(
+    vortex_core
+    PUBLIC
+    CUDA::cudart
+)
+
+add_executable(
+    vortex_tensor_test
+    tests/tensor_test.cpp
+)
+
+target_link_libraries(
+    vortex_tensor_test
+    PRIVATE
+    vortex_core
+)
