@@ -88,6 +88,7 @@ add_library(
     src/tensor.cpp
     src/device_buffer.cpp
     src/memory_pool.cpp
+    graph/graph.cpp
     src/matmul_cublas.cpp
     kernels/elementwise.cu
     kernels/activations.cu
@@ -407,4 +408,20 @@ target_link_libraries(
     vortex_memory_pool_benchmark
     PRIVATE
     vortex_core
+)
+
+add_executable(
+    vortex_graph_test
+    tests/graph_test.cpp
+)
+
+target_link_libraries(
+    vortex_graph_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME graph
+    COMMAND vortex_graph_test
 )
