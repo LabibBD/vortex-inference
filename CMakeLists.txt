@@ -90,6 +90,7 @@ add_library(
     src/cuda_stream.cpp
     src/cuda_graph.cpp
     src/memory_pool.cpp
+    src/model.cpp
     graph/graph.cpp
     graph/lifetime.cpp
     graph/graph_optimizer.cpp
@@ -563,3 +564,20 @@ target_link_libraries(
     PRIVATE
     vortex_core
 )
+
+add_executable(
+    vortex_model_loader_test
+    tests/model_loader_test.cpp
+)
+
+target_link_libraries(
+    vortex_model_loader_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME model_loader
+    COMMAND vortex_model_loader_test
+)
+
