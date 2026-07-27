@@ -25,3 +25,54 @@ target_compile_options(
     PRIVATE
     $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo>
 )
+
+add_executable(
+    vortex_vector_add
+    examples/vector_add.cu
+)
+
+target_include_directories(
+    vortex_vector_add
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(
+    vortex_vector_add
+    PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo>
+)
+
+add_executable(
+    vortex_scalar_mul
+    examples/scalar_mul.cu
+)
+
+target_include_directories(
+    vortex_scalar_mul
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(
+    vortex_scalar_mul
+    PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo>
+)
+
+add_executable(
+    vortex_relu
+    examples/relu.cu
+)
+
+target_include_directories(
+    vortex_relu
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_compile_options(
+    vortex_relu
+    PRIVATE
+    $<$<COMPILE_LANGUAGE:CUDA>:-lineinfo>
+)
