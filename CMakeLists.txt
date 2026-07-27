@@ -581,3 +581,14 @@ add_test(
     COMMAND vortex_model_loader_test
 )
 
+add_executable(
+    vortex_phase17_mlp_benchmark
+    benchmarks/phase17_mlp_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_phase17_mlp_benchmark
+    PRIVATE
+    vortex_core
+)
+

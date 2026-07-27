@@ -1,0 +1,2 @@
+runtime,batch,mean_ms,median_ms,p95_ms,samples_per_second,peak_managed_mib,max_error,mean_error,argmax_agreement
+VORTEX,128,0.205642,0.184659,0.381417,622442,3.52661,2.98023e-08,4.94765e-09,100
