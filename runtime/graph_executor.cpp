@@ -7,6 +7,7 @@
 #include "vortex/operators/matmul.hpp"
 #include "vortex/operators/softmax.hpp"
 
+#include <memory>
 #include <stdexcept>
 
 namespace vortex {
@@ -34,29 +35,54 @@ void require_io(
 GraphExecutor::GraphExecutor(
     const Graph& graph
 )
-    : graph_(graph) {
+    : graph_(graph),
+      lifetimes_(
+          analyze_tensor_lifetimes(graph)
+      ) {
 
     graph_.validate();
 
-    tensors_.reserve(
+    tensors_.resize(
         graph_.tensors().size()
     );
 
+    /*
+     * Inputs and constants must exist immediately
+     * because callers load data into them before run().
+     *
+     * Intermediate/output tensors are allocated lazily.
+     */
     for (
         const TensorDesc& desc :
         graph_.tensors()
     ) {
-        tensors_.push_back(
-            std::make_unique<Tensor>(
-                desc.shape,
-                desc.dtype,
-                desc.device
-            )
-        );
+        if (
+            desc.role == TensorRole::Input ||
+            desc.role == TensorRole::Constant
+        ) {
+            tensors_[desc.id] =
+                std::make_unique<Tensor>(
+                    desc.shape,
+                    desc.dtype,
+                    desc.device
+                );
+        }
     }
 }
 
 Tensor& GraphExecutor::tensor(
+    TensorId id
+) {
+    return live_tensor(id);
+}
+
+const Tensor& GraphExecutor::tensor(
+    TensorId id
+) const {
+    return live_tensor(id);
+}
+
+Tensor& GraphExecutor::live_tensor(
     TensorId id
 ) {
     if (id >= tensors_.size()) {
@@ -65,16 +91,52 @@ Tensor& GraphExecutor::tensor(
         );
     }
 
+    if (!tensors_[id]) {
+        throw std::runtime_error(
+            "Requested tensor is not currently live"
+        );
+    }
+
     return *tensors_[id];
 }
 
-const Tensor& GraphExecutor::tensor(
+const Tensor& GraphExecutor::live_tensor(
     TensorId id
 ) const {
     if (id >= tensors_.size()) {
         throw std::out_of_range(
             "Invalid GraphExecutor TensorId"
         );
+    }
+
+    if (!tensors_[id]) {
+        throw std::runtime_error(
+            "Requested tensor is not currently live"
+        );
+    }
+
+    return *tensors_[id];
+}
+
+Tensor& GraphExecutor::ensure_tensor(
+    TensorId id
+) {
+    if (id >= tensors_.size()) {
+        throw std::out_of_range(
+            "Invalid GraphExecutor TensorId"
+        );
+    }
+
+    if (!tensors_[id]) {
+        const TensorDesc& desc =
+            graph_.tensor(id);
+
+        tensors_[id] =
+            std::make_unique<Tensor>(
+                desc.shape,
+                desc.dtype,
+                desc.device
+            );
     }
 
     return *tensors_[id];
@@ -85,9 +147,77 @@ void GraphExecutor::run() {
         const Node& node :
         graph_.nodes()
     ) {
+        /*
+         * Allocate node outputs only when execution
+         * actually reaches them.
+         */
+        for (
+            const TensorId output :
+            node.outputs
+        ) {
+            ensure_tensor(
+                output
+            );
+        }
+
         execute_node(
             node
         );
+
+        /*
+         * Inputs whose final consumer was this node
+         * can now safely release their GPU storage.
+         */
+        release_dead_tensors(
+            node
+        );
+    }
+}
+
+void GraphExecutor::release_dead_tensors(
+    const Node& node
+) {
+    for (
+        const TensorId input :
+        node.inputs
+    ) {
+        const TensorDesc& desc =
+            graph_.tensor(input);
+
+        const TensorLifetime& lifetime =
+            lifetimes_[input];
+
+        if (
+            desc.role ==
+                TensorRole::Intermediate &&
+            lifetime.last_consumer ==
+                node.id
+        ) {
+            tensors_[input].reset();
+        }
+    }
+
+    /*
+     * A dead intermediate may be produced but never
+     * consumed. Release it immediately.
+     */
+    for (
+        const TensorId output :
+        node.outputs
+    ) {
+        const TensorDesc& desc =
+            graph_.tensor(output);
+
+        const TensorLifetime& lifetime =
+            lifetimes_[output];
+
+        if (
+            desc.role ==
+                TensorRole::Intermediate &&
+            lifetime.consumer_count == 0
+        ) {
+            tensors_[output].reset();
+        }
     }
 }
 
@@ -104,10 +234,10 @@ void GraphExecutor::execute_node(
             );
 
             ops::linear(
-                tensor(node.inputs[0]),
-                tensor(node.inputs[1]),
-                tensor(node.inputs[2]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.inputs[2]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -121,9 +251,9 @@ void GraphExecutor::execute_node(
             );
 
             ops::add(
-                tensor(node.inputs[0]),
-                tensor(node.inputs[1]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -137,8 +267,8 @@ void GraphExecutor::execute_node(
             );
 
             ops::relu(
-                tensor(node.inputs[0]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -152,8 +282,8 @@ void GraphExecutor::execute_node(
             );
 
             ops::gelu(
-                tensor(node.inputs[0]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -167,10 +297,10 @@ void GraphExecutor::execute_node(
             );
 
             ops::layernorm(
-                tensor(node.inputs[0]),
-                tensor(node.inputs[1]),
-                tensor(node.inputs[2]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.inputs[2]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -184,8 +314,8 @@ void GraphExecutor::execute_node(
             );
 
             ops::softmax(
-                tensor(node.inputs[0]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.outputs[0])
             );
 
             break;
@@ -199,9 +329,9 @@ void GraphExecutor::execute_node(
             );
 
             ops::matmul_tiled(
-                tensor(node.inputs[0]),
-                tensor(node.inputs[1]),
-                tensor(node.outputs[0])
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.outputs[0])
             );
 
             break;

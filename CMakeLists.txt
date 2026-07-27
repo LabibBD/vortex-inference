@@ -89,6 +89,7 @@ add_library(
     src/device_buffer.cpp
     src/memory_pool.cpp
     graph/graph.cpp
+    graph/lifetime.cpp
     runtime/graph_executor.cpp
     src/matmul_cublas.cpp
     kernels/elementwise.cu
@@ -441,5 +442,21 @@ target_link_libraries(
 add_test(
     NAME graph_executor
     COMMAND vortex_graph_executor_test
+)
+
+add_executable(
+    vortex_lifetime_test
+    tests/lifetime_test.cpp
+)
+
+target_link_libraries(
+    vortex_lifetime_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME lifetime
+    COMMAND vortex_lifetime_test
 )
 

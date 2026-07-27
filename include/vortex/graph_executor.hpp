@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vortex/graph.hpp"
+#include "vortex/lifetime.hpp"
 #include "vortex/tensor.hpp"
 
 #include <memory>
@@ -34,7 +35,23 @@ public:
     void run();
 
 private:
+    Tensor& live_tensor(
+        TensorId id
+    );
+
+    const Tensor& live_tensor(
+        TensorId id
+    ) const;
+
+    Tensor& ensure_tensor(
+        TensorId id
+    );
+
     void execute_node(
+        const Node& node
+    );
+
+    void release_dead_tensors(
         const Node& node
     );
 
@@ -43,6 +60,9 @@ private:
     std::vector<
         std::unique_ptr<Tensor>
     > tensors_;
+
+    std::vector<TensorLifetime>
+        lifetimes_;
 };
 
 } // namespace vortex
