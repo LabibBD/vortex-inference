@@ -2,6 +2,7 @@
 
 #include "vortex/operators/activations.hpp"
 #include "vortex/operators/elementwise.hpp"
+#include "vortex/operators/fused.hpp"
 #include "vortex/operators/layernorm.hpp"
 #include "vortex/operators/linear.hpp"
 #include "vortex/operators/matmul.hpp"
@@ -234,6 +235,23 @@ void GraphExecutor::execute_node(
             );
 
             ops::linear(
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.inputs[2]),
+                live_tensor(node.outputs[0])
+            );
+
+            break;
+        }
+
+        case OpType::LinearGELU: {
+            require_io(
+                node,
+                3,
+                1
+            );
+
+            ops::linear_gelu_fused(
                 live_tensor(node.inputs[0]),
                 live_tensor(node.inputs[1]),
                 live_tensor(node.inputs[2]),

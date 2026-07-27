@@ -90,6 +90,7 @@ add_library(
     src/memory_pool.cpp
     graph/graph.cpp
     graph/lifetime.cpp
+    graph/graph_optimizer.cpp
     runtime/graph_executor.cpp
     src/matmul_cublas.cpp
     kernels/elementwise.cu
@@ -99,6 +100,7 @@ add_library(
     kernels/matmul_naive.cu
     kernels/matmul_tiled.cu
     kernels/linear.cu
+    kernels/fused_linear_gelu.cu
     kernels/layernorm.cu
     kernels/cast.cu
 )
@@ -458,5 +460,49 @@ target_link_libraries(
 add_test(
     NAME lifetime
     COMMAND vortex_lifetime_test
+)
+
+add_executable(
+    vortex_fusion_test
+    tests/fusion_test.cpp
+)
+
+target_link_libraries(
+    vortex_fusion_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME fusion
+    COMMAND vortex_fusion_test
+)
+
+
+add_executable(
+    vortex_fusion_benchmark
+    benchmarks/fusion_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_fusion_benchmark
+    PRIVATE
+    vortex_core
+)
+
+add_executable(
+    vortex_graph_fusion_test
+    tests/graph_fusion_test.cpp
+)
+
+target_link_libraries(
+    vortex_graph_fusion_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME graph_fusion
+    COMMAND vortex_graph_fusion_test
 )
 

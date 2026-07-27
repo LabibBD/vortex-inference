@@ -243,6 +243,9 @@ const char* op_type_name(
         case OpType::Linear:
             return "Linear";
 
+        case OpType::LinearGELU:
+            return "LinearGELU";
+
         case OpType::Add:
             return "Add";
 
