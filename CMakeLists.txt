@@ -102,6 +102,7 @@ add_library(
     kernels/reductions.cu
     kernels/softmax.cu
     kernels/scaled_softmax.cu
+    kernels/numerics.cu
     kernels/matmul_naive.cu
     kernels/matmul_tiled.cu
     kernels/linear.cu
@@ -691,5 +692,21 @@ target_link_libraries(
     vortex_scaled_softmax_benchmark
     PRIVATE
     vortex_core
+)
+
+add_executable(
+    vortex_numerical_validation_test
+    tests/numerical_validation_test.cpp
+)
+
+target_link_libraries(
+    vortex_numerical_validation_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME numerical_validation
+    COMMAND vortex_numerical_validation_test
 )
 

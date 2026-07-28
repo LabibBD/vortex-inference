@@ -1,0 +1,16 @@
+=================================
+ VORTEX Phase-25 Numerical Validation
+=================================
+
+softmax_max_error=1.49012e-08
+scaled_softmax_max_error=7.45058e-09
+softmax_row_sum_error=5.96046e-08
+layernorm_max_error=0.000327945
+attention_max_error=1.90735e-06
+attention_mean_error=2.29451e-07
+attention_repeat_error=0
+fp16_relu_max_error=0
+fp16_gelu_max_error=0.000973463
+finite_detection=PASS
+
+[VORTEX] Phase-25 numerical validation PASSED
