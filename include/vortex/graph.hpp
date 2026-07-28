@@ -28,7 +28,8 @@ enum class OpType {
     Softmax,
     MatMul,
     Transpose,
-    BatchedMatMul
+    BatchedMatMul,
+    SelfAttention
 };
 
 struct TensorDesc {

@@ -91,6 +91,7 @@ add_library(
     src/cuda_graph.cpp
     src/memory_pool.cpp
     src/model.cpp
+    src/attention.cpp
     graph/graph.cpp
     graph/lifetime.cpp
     graph/graph_optimizer.cpp
@@ -620,3 +621,30 @@ add_test(
     COMMAND vortex_transformer_primitives_test
 )
 
+add_executable(
+    vortex_self_attention_test
+    tests/self_attention_test.cpp
+)
+
+target_link_libraries(
+    vortex_self_attention_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME self_attention
+    COMMAND vortex_self_attention_test
+)
+
+
+add_executable(
+    vortex_attention_benchmark
+    benchmarks/attention_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_attention_benchmark
+    PRIVATE
+    vortex_core
+)

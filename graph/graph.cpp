@@ -269,6 +269,9 @@ const char* op_type_name(
 
         case OpType::BatchedMatMul:
             return "BatchedMatMul";
+
+        case OpType::SelfAttention:
+            return "SelfAttention";
     }
 
     return "Unknown";

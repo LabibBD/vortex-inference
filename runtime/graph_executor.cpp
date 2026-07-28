@@ -1,6 +1,7 @@
 #include "vortex/graph_executor.hpp"
 
 #include "vortex/operators/activations.hpp"
+#include "vortex/operators/attention.hpp"
 #include "vortex/operators/elementwise.hpp"
 #include "vortex/operators/fused.hpp"
 #include "vortex/operators/layernorm.hpp"
@@ -381,6 +382,23 @@ void GraphExecutor::execute_node(
             ops::batched_matmul(
                 live_tensor(node.inputs[0]),
                 live_tensor(node.inputs[1]),
+                live_tensor(node.outputs[0])
+            );
+
+            break;
+        }
+
+        case OpType::SelfAttention: {
+            require_io(
+                node,
+                3,
+                1
+            );
+
+            ops::scaled_dot_product_attention(
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.inputs[2]),
                 live_tensor(node.outputs[0])
             );
 

@@ -42,11 +42,11 @@ void validate_softmax(
     }
 
     if (
-        input.shape().size() != 1 &&
-        input.shape().size() != 2
+        input.shape().size() < 1 ||
+        input.shape().size() > 3
     ) {
         throw std::invalid_argument(
-            "Softmax currently supports 1D or 2D tensors"
+            "Softmax currently supports rank-1, rank-2 or rank-3 tensors"
         );
     }
 }
@@ -195,7 +195,7 @@ void softmax(
             static_cast<int>(
                 input.shape()[0]
             );
-    } else {
+    } else if (input.shape().size() == 2) {
         rows =
             static_cast<int>(
                 input.shape()[0]
@@ -204,6 +204,17 @@ void softmax(
         columns =
             static_cast<int>(
                 input.shape()[1]
+            );
+    } else {
+        rows =
+            static_cast<int>(
+                input.shape()[0] *
+                input.shape()[1]
+            );
+
+        columns =
+            static_cast<int>(
+                input.shape()[2]
             );
     }
 

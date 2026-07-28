@@ -191,6 +191,10 @@ OpType parse_op(
         return OpType::BatchedMatMul;
     }
 
+    if (value == "SelfAttention") {
+        return OpType::SelfAttention;
+    }
+
     throw std::runtime_error(
         "Unsupported VORTEX model operator: " +
         value
