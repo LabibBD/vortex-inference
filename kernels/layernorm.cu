@@ -40,14 +40,19 @@ void validate_layernorm(
         );
     }
 
+    const bool valid_input_rank =
+        input.shape().size() == 2 ||
+        input.shape().size() == 3;
+
     if (
-        input.shape().size() != 2 ||
-        output.shape().size() != 2 ||
+        !valid_input_rank ||
+        output.shape().size() !=
+            input.shape().size() ||
         gamma.shape().size() != 1 ||
         beta.shape().size() != 1
     ) {
         throw std::invalid_argument(
-            "LayerNorm expects 2D input/output and 1D gamma/beta"
+            "LayerNorm expects rank-2/rank-3 input and 1D gamma/beta"
         );
     }
 
@@ -58,7 +63,7 @@ void validate_layernorm(
     }
 
     const std::size_t features =
-        input.shape()[1];
+        input.shape().back();
 
     if (
         gamma.shape()[0] != features ||
@@ -229,14 +234,17 @@ void layernorm(
         );
     }
 
-    const int rows =
-        static_cast<int>(
-            input.shape()[0]
-        );
-
     const int features =
         static_cast<int>(
-            input.shape()[1]
+            input.shape().back()
+        );
+
+    const int rows =
+        static_cast<int>(
+            input.numel() /
+            static_cast<std::size_t>(
+                features
+            )
         );
 
     layernorm_kernel<<<

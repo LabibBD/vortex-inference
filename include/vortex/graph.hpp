@@ -20,6 +20,7 @@ enum class TensorRole {
 
 enum class OpType {
     Linear,
+    Linear3D,
     LinearGELU,
     Add,
     ReLU,

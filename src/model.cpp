@@ -155,6 +155,10 @@ OpType parse_op(
         return OpType::Linear;
     }
 
+    if (value == "Linear3D") {
+        return OpType::Linear3D;
+    }
+
     if (value == "LinearGELU") {
         return OpType::LinearGELU;
     }

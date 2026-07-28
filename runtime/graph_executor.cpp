@@ -246,6 +246,23 @@ void GraphExecutor::execute_node(
             break;
         }
 
+        case OpType::Linear3D: {
+            require_io(
+                node,
+                3,
+                1
+            );
+
+            ops::linear_3d(
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.inputs[2]),
+                live_tensor(node.outputs[0])
+            );
+
+            break;
+        }
+
         case OpType::LinearGELU: {
             require_io(
                 node,

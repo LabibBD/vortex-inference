@@ -648,3 +648,20 @@ target_link_libraries(
     PRIVATE
     vortex_core
 )
+
+add_executable(
+    vortex_transformer_block_test
+    tests/transformer_block_test.cpp
+)
+
+target_link_libraries(
+    vortex_transformer_block_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME transformer_block
+    COMMAND vortex_transformer_block_test
+)
+
