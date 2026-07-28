@@ -1,0 +1,21 @@
+=================================
+ VORTEX Randomized Transformer Validation
+=================================
+
+normal_small seed=25001 max=4.768372e-07 mean=6.693767e-08 repeat=0.000000e+00
+normal_standard seed=25002 max=7.152557e-07 mean=6.517897e-08 repeat=0.000000e+00
+normal_large seed=25003 max=7.152557e-07 mean=6.877612e-08 repeat=0.000000e+00
+uniform_standard seed=25004 max=4.768372e-07 mean=6.526591e-08 repeat=0.000000e+00
+uniform_large seed=25005 max=4.768372e-07 mean=7.406076e-08 repeat=0.000000e+00
+near_constant seed=25006 max=7.152557e-07 mean=1.323601e-07 repeat=0.000000e+00
+sparse seed=25007 max=9.536743e-07 mean=5.743314e-08 repeat=0.000000e+00
+alternating seed=25008 max=3.576279e-07 mean=8.824281e-08 repeat=0.000000e+00
+
+Cases:               8
+Executions/case:     21
+Worst case:          sparse
+Global max error:    9.536743e-07
+Worst mean error:    1.323601e-07
+Max repeat error:    0.000000e+00
+
+[VORTEX] Randomized transformer validation PASSED

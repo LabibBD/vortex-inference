@@ -1,0 +1,9 @@
+case	seed	distribution	input_min	input_max	reference_abs_max
+normal_small	25001	normal_small	-0.405966997	0.356928766	3.06003261
+normal_standard	25002	normal_standard	-3.85426307	3.34899807	3.9098618
+normal_large	25003	normal_large	-13.1457596	14.1293707	3.13390589
+uniform_standard	25004	uniform_standard	-0.999746799	0.998244286	2.77476168
+uniform_large	25005	uniform_large	-7.99145699	7.99243927	2.55909634
+near_constant	25006	near_constant	9.97086811	10.0330248	2.8323772
+sparse	25007	sparse	-7.13680315	7.99143791	5.45192528
+alternating	25008	alternating	-8	8	1.46762729

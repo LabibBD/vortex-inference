@@ -710,3 +710,19 @@ add_test(
     COMMAND vortex_numerical_validation_test
 )
 
+add_executable(
+    vortex_randomized_transformer_test
+    tests/randomized_transformer_test.cpp
+)
+
+target_link_libraries(
+    vortex_randomized_transformer_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME randomized_transformer
+    COMMAND vortex_randomized_transformer_test
+)
+
