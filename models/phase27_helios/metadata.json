@@ -1,0 +1,20 @@
+{
+  "name": "HELIOS Outcome Verifier",
+  "input_name": "verification_features",
+  "input_shape": [
+    1,
+    256
+  ],
+  "output_name": "outcome_probabilities",
+  "output_shape": [
+    1,
+    3
+  ],
+  "labels": [
+    "SUCCESS",
+    "FAILURE",
+    "UNCERTAIN"
+  ],
+  "precision": "FP32",
+  "purpose": "Interface-level integration model for the VORTEX backend. Replace its checkpoint with a verifier trained on real HELIOS data before claiming task-level accuracy."
+}

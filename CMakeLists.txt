@@ -754,3 +754,38 @@ target_link_libraries(
     vortex_core
 )
 
+add_executable(
+    vortex_infer
+    tools/vortex_infer.cpp
+)
+
+target_link_libraries(
+    vortex_infer
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME helios_verifier_integration
+    COMMAND
+        vortex_infer
+        --model
+        ../models/phase27_helios_verifier.vortex
+        --input
+        ../models/phase27_helios/input.bin
+        --labels
+        ../models/phase27_helios/labels.txt
+        --reference
+        ../models/phase27_helios/reference.bin
+        --tolerance
+        0.0001
+        --json
+)
+
+set_tests_properties(
+    helios_verifier_integration
+    PROPERTIES
+    ENVIRONMENT
+    "VORTEX_SYNC_MODE=boundary"
+)
+
