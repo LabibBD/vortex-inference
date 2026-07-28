@@ -183,6 +183,14 @@ OpType parse_op(
         return OpType::MatMul;
     }
 
+    if (value == "Transpose") {
+        return OpType::Transpose;
+    }
+
+    if (value == "BatchedMatMul") {
+        return OpType::BatchedMatMul;
+    }
+
     throw std::runtime_error(
         "Unsupported VORTEX model operator: " +
         value

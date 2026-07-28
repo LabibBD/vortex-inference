@@ -263,6 +263,12 @@ const char* op_type_name(
 
         case OpType::MatMul:
             return "MatMul";
+
+        case OpType::Transpose:
+            return "Transpose";
+
+        case OpType::BatchedMatMul:
+            return "BatchedMatMul";
     }
 
     return "Unknown";

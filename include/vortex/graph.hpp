@@ -26,7 +26,9 @@ enum class OpType {
     GELU,
     LayerNorm,
     Softmax,
-    MatMul
+    MatMul,
+    Transpose,
+    BatchedMatMul
 };
 
 struct TensorDesc {

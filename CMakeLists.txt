@@ -105,6 +105,7 @@ add_library(
     kernels/linear.cu
     kernels/fused_linear_gelu.cu
     kernels/layernorm.cu
+    kernels/transformer_primitives.cu
     kernels/cast.cu
 )
 
@@ -601,5 +602,21 @@ target_link_libraries(
     vortex_phase18_vision_benchmark
     PRIVATE
     vortex_core
+)
+
+add_executable(
+    vortex_transformer_primitives_test
+    tests/transformer_primitives_test.cpp
+)
+
+target_link_libraries(
+    vortex_transformer_primitives_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME transformer_primitives
+    COMMAND vortex_transformer_primitives_test
 )
 

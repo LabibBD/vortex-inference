@@ -7,6 +7,7 @@
 #include "vortex/operators/linear.hpp"
 #include "vortex/operators/matmul.hpp"
 #include "vortex/operators/softmax.hpp"
+#include "vortex/operators/transformer.hpp"
 
 #include <memory>
 #include <stdexcept>
@@ -347,6 +348,37 @@ void GraphExecutor::execute_node(
             );
 
             ops::matmul_tiled(
+                live_tensor(node.inputs[0]),
+                live_tensor(node.inputs[1]),
+                live_tensor(node.outputs[0])
+            );
+
+            break;
+        }
+
+        case OpType::Transpose: {
+            require_io(
+                node,
+                1,
+                1
+            );
+
+            ops::transpose_last_two(
+                live_tensor(node.inputs[0]),
+                live_tensor(node.outputs[0])
+            );
+
+            break;
+        }
+
+        case OpType::BatchedMatMul: {
+            require_io(
+                node,
+                2,
+                1
+            );
+
+            ops::batched_matmul(
                 live_tensor(node.inputs[0]),
                 live_tensor(node.inputs[1]),
                 live_tensor(node.outputs[0])
