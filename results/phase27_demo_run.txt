@@ -1,0 +1,43 @@
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/qmlabib/vortex-inference/build
+[ 95%] Built target vortex_core
+[100%] Built target vortex_infer
+{
+  "prediction": "FAILURE",
+  "class_index": 1,
+  "confidence": 0.34868369,
+  "latency_ms": 0.22266700,
+  "backend": "VORTEX CUDA",
+  "probabilities": {
+    "SUCCESS": 0.32583141,
+    "FAILURE": 0.34868369,
+    "UNCERTAIN": 0.32548484
+  },
+  "validation": {
+    "max_abs_error": 0.00000003,
+    "tolerance": 0.00010000,
+    "passed": true
+  }
+}
+=================================
+ HELIOS × VORTEX Demo
+=================================
+
+{
+  "prediction": "FAILURE",
+  "class_index": 1,
+  "confidence": 0.34868369,
+  "latency_ms": 0.228137,
+  "backend": "VORTEX CUDA",
+  "probabilities": {
+    "SUCCESS": 0.32583141,
+    "FAILURE": 0.34868369,
+    "UNCERTAIN": 0.32548484
+  }
+}
+
+HELIOS decision:
+  Trigger the HELIOS recovery policy and retry the failed action.
+
+[VORTEX] Demo completed successfully
