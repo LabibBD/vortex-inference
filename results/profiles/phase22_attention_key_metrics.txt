@@ -1,0 +1,177 @@
+    Memory Throughput                 %         2.02
+    DRAM Throughput                   %         2.02
+    Duration                         us         1.98
+    WRN   Sampling interval is larger than 10% of the workload duration, which likely results in very few collected     
+    OPT   Est. Local Speedup: 99.85%                                                                                    
+    Shared Memory Spilling Requests                                0
+    Shared Memory Spilling Request Overhead           %            0
+    Memory Throughput                           Gbyte/s         5.10
+    OPT   Est. Speedup: 0.01966%                                                                                        
+    OPT   Est. Speedup: 0.195%                                                                                          
+    OPT   Est. Local Speedup: 88.94%                                                                                    
+          number of eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons    
+    OPT   Est. Speedup: 37.69%                                                                                          
+          On average, each warp of this workload spends 6.8 cycles being stalled waiting for an immediate constant      
+          register access. This stall type represents about 37.7% of the total average of 18.1 cycles between issuing   
+    OPT   Est. Speedup: 33.07%                                                                                          
+          On average, each warp of this workload spends 6.0 cycles being stalled waiting for a scoreboard dependency on 
+          used data to shared memory. This stall type represents about 33.1% of the total average of 18.1 cycles        
+    INF   Check the Warp Stall Sampling (All Samples) table for the top stall locations in your source based on         
+          on each stall reason.                                                                                         
+    Shared Memory Spilling Requests                 byte            0
+    Registers Per Thread             register/thread              24
+    Shared Memory Configuration Size           Kbyte           16.38
+    Driver Shared Memory Per Block       Kbyte/block            1.02
+    Dynamic Shared Memory Per Block       byte/block               0
+    Static Shared Memory Per Block        byte/block               0
+    OPT   Est. Speedup: 95.83%                                                                                          
+    Section: Occupancy
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        14.91
+    OPT   Est. Speedup: 85.09%                                                                                          
+          The difference between calculated theoretical (100.0%) and measured achieved occupancy (14.9%) can be the     
+          Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on     
+          optimizing occupancy.                                                                                         
+    OPT   Est. Speedup: 5.304%                                                                                          
+    OPT   Est. Speedup: 6%                                                                                              
+    Memory Throughput                 %         1.20
+    DRAM Throughput                   %         1.20
+    Duration                         us         1.92
+    WRN   Sampling interval is larger than 10% of the workload duration, which likely results in very few collected     
+    OPT   Est. Local Speedup: 99.78%                                                                                    
+    Shared Memory Spilling Requests                                0
+    Shared Memory Spilling Request Overhead           %            0
+    Memory Throughput                           Gbyte/s         3.07
+    OPT   Est. Speedup: 0.673%                                                                                          
+    OPT   Est. Speedup: 0.2387%                                                                                         
+    OPT   Est. Local Speedup: 91.15%                                                                                    
+          number of eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons    
+    OPT   Est. Speedup: 36.25%                                                                                          
+          On average, each warp of this workload spends 8.5 cycles being stalled waiting for an immediate constant      
+          register access. This stall type represents about 36.3% of the total average of 23.4 cycles between issuing   
+    INF   Check the Warp Stall Sampling (All Samples) table for the top stall locations in your source based on         
+          on each stall reason.                                                                                         
+    Shared Memory Spilling Requests                 byte            0
+    Registers Per Thread             register/thread              37
+    Shared Memory Configuration Size           Kbyte           65.54
+    Driver Shared Memory Per Block       Kbyte/block            1.02
+    Dynamic Shared Memory Per Block       byte/block               0
+    Static Shared Memory Per Block       Kbyte/block            2.05
+    OPT   Est. Speedup: 91.67%                                                                                          
+    Section: Occupancy
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        16.42
+    OPT   Est. Speedup: 83.58%                                                                                          
+          The difference between calculated theoretical (100.0%) and measured achieved occupancy (16.4%) can be the     
+          Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on     
+          optimizing occupancy.                                                                                         
+    OPT   Est. Speedup: 6.121%                                                                                          
+    OPT   Est. Speedup: 0.4864%                                                                                         
+    Memory Throughput                 %         0.81
+    DRAM Throughput                   %         0.81
+    Duration                         us         1.63
+    WRN   Sampling interval is larger than 10% of the workload duration, which likely results in very few collected     
+    OPT   Est. Local Speedup: 99.97%                                                                                    
+    Shared Memory Spilling Requests                                0
+    Shared Memory Spilling Request Overhead           %            0
+    Memory Throughput                           Gbyte/s         2.04
+    OPT   Est. Speedup: 0.02424%                                                                                        
+    OPT   Est. Speedup: 0.02424%                                                                                        
+    OPT   Est. Local Speedup: 97.39%                                                                                    
+          number of eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons    
+    OPT   Est. Speedup: 53.4%                                                                                           
+          On average, each warp of this workload spends 36.2 cycles being stalled waiting for an immediate constant     
+          register access. This stall type represents about 53.4% of the total average of 67.7 cycles between issuing   
+    OPT   Est. Speedup: 32.88%                                                                                          
+          On average, each warp of this workload spends 22.3 cycles being stalled waiting for a scoreboard dependency   
+          used data to shared memory. This stall type represents about 32.9% of the total average of 67.7 cycles        
+    INF   Check the Warp Stall Sampling (All Samples) table for the top stall locations in your source based on         
+          on each stall reason.                                                                                         
+    Shared Memory Spilling Requests                 byte            0
+    OPT   Est. Speedup: 0.00611%                                                                                        
+    Registers Per Thread             register/thread              16
+    Shared Memory Configuration Size           Kbyte           16.38
+    Driver Shared Memory Per Block       Kbyte/block            1.02
+    Dynamic Shared Memory Per Block       byte/block               0
+    Static Shared Memory Per Block        byte/block               0
+    OPT   Est. Speedup: 95.83%                                                                                          
+    Section: Occupancy
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        14.43
+    OPT   Est. Speedup: 85.57%                                                                                          
+          The difference between calculated theoretical (100.0%) and measured achieved occupancy (14.4%) can be the     
+          Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on     
+          optimizing occupancy.                                                                                         
+    OPT   Est. Speedup: 6.873%                                                                                          
+    Memory Throughput                 %        10.45
+    DRAM Throughput                   %         0.93
+    Duration                         us         2.59
+    WRN   Sampling interval is larger than 10% of the workload duration, which likely results in very few collected     
+    OPT   Est. Local Speedup: 96.82%                                                                                    
+    Shared Memory Spilling Requests                                0
+    Shared Memory Spilling Request Overhead           %            0
+    Memory Throughput                           Gbyte/s         2.32
+    OPT   Est. Speedup: 4.571%                                                                                          
+    OPT   Est. Speedup: 4.571%                                                                                          
+    OPT   Est. Local Speedup: 88.9%                                                                                     
+          number of eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons    
+    OPT   Est. Speedup: 30.01%                                                                                          
+          On average, each warp of this workload spends 5.4 cycles being stalled waiting for sibling warps at a CTA     
+          affecting occupancy, unless shared memory becomes a new occupancy limiter. Also, try to identify which        
+          barrier instruction causes the most stalls, and optimize the code executed before that synchronization point  
+          first. This stall type represents about 30.0% of the total average of 18.0 cycles between issuing two         
+    INF   Check the Warp Stall Sampling (All Samples) table for the top stall locations in your source based on         
+          on each stall reason.                                                                                         
+    OPT   Est. Speedup: 4.243%                                                                                          
+    Shared Memory Spilling Requests                 byte            0
+    OPT   Est. Speedup: 0.3706%                                                                                         
+    Registers Per Thread             register/thread              18
+    Shared Memory Configuration Size           Kbyte           32.77
+    Driver Shared Memory Per Block       Kbyte/block            1.02
+    Dynamic Shared Memory Per Block      Kbyte/block            1.02
+    Static Shared Memory Per Block        byte/block               0
+    OPT   Est. Speedup: 25%                                                                                             
+    Section: Occupancy
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        16.55
+    OPT   Est. Speedup: 83.45%                                                                                          
+          The difference between calculated theoretical (100.0%) and measured achieved occupancy (16.6%) can be the     
+          Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on     
+          optimizing occupancy.                                                                                         
+    OPT   Est. Speedup: 12.85%                                                                                          
+    OPT   Est. Speedup: 13.69%                                                                                          
+    OPT   Est. Speedup: 12.85%                                                                                          
+    OPT   Est. Speedup: 5.513%                                                                                          
+    Memory Throughput                 %         1.16
+    DRAM Throughput                   %         1.16
+    Duration                         us         1.92
+    WRN   Sampling interval is larger than 10% of the workload duration, which likely results in very few collected     
+    OPT   Est. Local Speedup: 99.78%                                                                                    
+    Shared Memory Spilling Requests                                0
+    Shared Memory Spilling Request Overhead           %            0
+    Memory Throughput                           Gbyte/s         2.87
+    OPT   Est. Speedup: 0.6954%                                                                                         
+    OPT   Est. Speedup: 0.1857%                                                                                         
+    OPT   Est. Local Speedup: 90.6%                                                                                     
+          number of eligible warps, reduce the time the active warps are stalled by inspecting the top stall reasons    
+    OPT   Est. Speedup: 38.15%                                                                                          
+          On average, each warp of this workload spends 8.1 cycles being stalled waiting for an immediate constant      
+          register access. This stall type represents about 38.1% of the total average of 21.2 cycles between issuing   
+    INF   Check the Warp Stall Sampling (All Samples) table for the top stall locations in your source based on         
+          on each stall reason.                                                                                         
+    Shared Memory Spilling Requests                 byte            0
+    Registers Per Thread             register/thread              37
+    Shared Memory Configuration Size           Kbyte           65.54
+    Driver Shared Memory Per Block       Kbyte/block            1.02
+    Dynamic Shared Memory Per Block       byte/block               0
+    Static Shared Memory Per Block       Kbyte/block            2.05
+    OPT   Est. Speedup: 91.67%                                                                                          
+    Section: Occupancy
+    Theoretical Occupancy                     %          100
+    Achieved Occupancy                        %        16.02
+    OPT   Est. Speedup: 83.98%                                                                                          
+          The difference between calculated theoretical (100.0%) and measured achieved occupancy (16.0%) can be the     
+          Guide (https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#occupancy) for more details on     
+          optimizing occupancy.                                                                                         
+    OPT   Est. Speedup: 6.82%                                                                                           
+    OPT   Est. Speedup: 0.4642%                                                                                         

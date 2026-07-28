@@ -1,0 +1,20 @@
+==PROF== Connected to process 64163 (/home/qmlabib/vortex-inference/build/vortex_self_attention_test)
+==PROF== Profiling "transpose_last_two_kernel" - 0: 0%....50%....100% - 44 passes
+==PROF== Profiling "batched_matmul_kernel" - 1: 0%....50%....100% - 44 passes
+==PROF== Profiling "scale_kernel" - 2: 0%....50%....100% - 44 passes
+==PROF== Profiling "rowwise_softmax_kernel" - 3: 0%....50%....100% - 44 passes
+==PROF== Profiling "batched_matmul_kernel" - 4: 0%....50%....100% - 44 passes
+=================================
+ VORTEX Self-Attention Test
+=================================
+
+Batch:              2
+Tokens:             9
+Head dimension:     13
+Maximum abs error:  1.11759e-08
+Mean abs error:     2.7761e-09
+All values finite:  YES
+
+[VORTEX] Self-attention PASSED
+==PROF== Disconnected from process 64163
+==PROF== Report: /home/qmlabib/vortex-inference/results/profiles/phase22_attention.ncu-rep
