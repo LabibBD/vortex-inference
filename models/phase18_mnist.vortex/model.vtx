@@ -1,0 +1,24 @@
+VORTEX_MODEL	1
+WEIGHTS	weights.bin
+TENSORS	13
+TENSOR	0	image_pixels	Input	FP32	CUDA	2	1024,784	-1	0
+TENSOR	1	model.fc1.weight__vortex_transposed_0	Constant	FP32	CUDA	2	784,256	0	802816
+TENSOR	2	model.fc1.bias	Constant	FP32	CUDA	1	256	802816	1024
+TENSOR	3	/model/fc1/Gemm_output_0	Intermediate	FP32	CUDA	2	1024,256	-1	0
+TENSOR	4	/model/relu1/Relu_output_0	Intermediate	FP32	CUDA	2	1024,256	-1	0
+TENSOR	5	model.fc2.weight__vortex_transposed_2	Constant	FP32	CUDA	2	256,128	803840	131072
+TENSOR	6	model.fc2.bias	Constant	FP32	CUDA	1	128	934912	512
+TENSOR	7	/model/fc2/Gemm_output_0	Intermediate	FP32	CUDA	2	1024,128	-1	0
+TENSOR	8	/model/relu2/Relu_output_0	Intermediate	FP32	CUDA	2	1024,128	-1	0
+TENSOR	9	model.fc3.weight__vortex_transposed_4	Constant	FP32	CUDA	2	128,10	935424	5120
+TENSOR	10	model.fc3.bias	Constant	FP32	CUDA	1	10	940544	40
+TENSOR	11	/model/fc3/Gemm_output_0	Intermediate	FP32	CUDA	2	1024,10	-1	0
+TENSOR	12	probabilities	Output	FP32	CUDA	2	1024,10	-1	0
+NODES	6
+NODE	0	/model/fc1/Gemm	Linear	0,1,2	3
+NODE	1	/model/relu1/Relu	ReLU	3	4
+NODE	2	/model/fc2/Gemm	Linear	4,5,6	7
+NODE	3	/model/relu2/Relu	ReLU	7	8
+NODE	4	/model/fc3/Gemm	Linear	8,9,10	11
+NODE	5	/Softmax	Softmax	11	12
+OUTPUTS	12

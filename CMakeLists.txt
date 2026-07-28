@@ -592,3 +592,14 @@ target_link_libraries(
     vortex_core
 )
 
+add_executable(
+    vortex_phase18_vision_benchmark
+    benchmarks/phase18_vision_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_phase18_vision_benchmark
+    PRIVATE
+    vortex_core
+)
+

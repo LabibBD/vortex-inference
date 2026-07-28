@@ -1,0 +1,2 @@
+dataset,batch,mean_ms,median_ms,p95_ms,images_per_second,peak_managed_mib,pytorch_accuracy,vortex_accuracy,agreement,max_error,mean_error
+MNIST,1024,0.491745,0.490456,0.498591,2.08238e+06,7.19702,95.8984,95.8984,100,1.07288e-06,9.4979e-09
