@@ -1,10 +1,12 @@
 #include "vortex/graph.hpp"
 #include "vortex/graph_executor.hpp"
+#include "vortex/memory_pool.hpp"
 
 #include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstddef>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -113,6 +115,11 @@ int main() {
     using namespace vortex;
 
     try {
+        auto& pool =
+            MemoryPool::global();
+
+        pool.clear();
+
         constexpr std::size_t BATCH = 4;
         constexpr std::size_t TOKENS = 16;
         constexpr std::size_t MODEL_DIM = 32;
@@ -601,8 +608,57 @@ int main() {
                 result.size()
             );
 
-        constexpr int WARMUP = 10;
-        constexpr int ITERATIONS = 50;
+        const auto read_positive_integer =
+            [](
+                const char* name,
+                int fallback
+            ) {
+                const char* value =
+                    std::getenv(name);
+
+                if (value == nullptr) {
+                    return fallback;
+                }
+
+                char* end = nullptr;
+
+                const long parsed =
+                    std::strtol(
+                        value,
+                        &end,
+                        10
+                    );
+
+                if (
+                    end == value ||
+                    *end != '\0' ||
+                    parsed <= 0 ||
+                    parsed > 1000000
+                ) {
+                    throw std::runtime_error(
+                        std::string(
+                            "Invalid positive integer in "
+                        ) +
+                        name
+                    );
+                }
+
+                return static_cast<int>(
+                    parsed
+                );
+            };
+
+        const int WARMUP =
+            read_positive_integer(
+                "VORTEX_BENCH_WARMUP",
+                10
+            );
+
+        const int ITERATIONS =
+            read_positive_integer(
+                "VORTEX_BENCH_ITERATIONS",
+                50
+            );
 
         for (
             int i = 0;
@@ -669,6 +725,15 @@ int main() {
                 )
             ];
 
+        const auto memory_stats =
+            pool.stats();
+
+        const double peak_managed_mib =
+            static_cast<double>(
+                memory_stats.peak_active_bytes
+            ) /
+            (1024.0 * 1024.0);
+
         std::cout
             << "=================================\n"
             << " VORTEX Transformer Block\n"
@@ -697,6 +762,16 @@ int main() {
         std::cout
             << "Graph nodes:        "
             << graph.nodes().size()
+            << '\n';
+
+        std::cout
+            << "Warmup:             "
+            << WARMUP
+            << '\n';
+
+        std::cout
+            << "Iterations:         "
+            << ITERATIONS
             << "\n\n";
 
         std::cout
@@ -712,7 +787,12 @@ int main() {
         std::cout
             << "P95 latency:        "
             << p95_latency
-            << " ms\n\n";
+            << " ms\n";
+
+        std::cout
+            << "Peak managed VRAM:  "
+            << peak_managed_mib
+            << " MiB\n\n";
 
         std::cout
             << "Maximum abs error:  "
