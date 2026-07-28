@@ -726,3 +726,19 @@ add_test(
     COMMAND vortex_randomized_transformer_test
 )
 
+add_executable(
+    vortex_int8_linear_test
+    tests/int8_linear_test.cpp
+)
+
+target_link_libraries(
+    vortex_int8_linear_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME int8_linear
+    COMMAND vortex_int8_linear_test
+)
+
