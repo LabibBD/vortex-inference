@@ -101,6 +101,7 @@ add_library(
     kernels/activations.cu
     kernels/reductions.cu
     kernels/softmax.cu
+    kernels/scaled_softmax.cu
     kernels/matmul_naive.cu
     kernels/matmul_tiled.cu
     kernels/linear.cu
@@ -663,5 +664,32 @@ target_link_libraries(
 add_test(
     NAME transformer_block
     COMMAND vortex_transformer_block_test
+)
+
+add_executable(
+    vortex_scaled_softmax_test
+    tests/scaled_softmax_test.cpp
+)
+
+target_link_libraries(
+    vortex_scaled_softmax_test
+    PRIVATE
+    vortex_core
+)
+
+add_test(
+    NAME scaled_softmax
+    COMMAND vortex_scaled_softmax_test
+)
+
+add_executable(
+    vortex_scaled_softmax_benchmark
+    benchmarks/scaled_softmax_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_scaled_softmax_benchmark
+    PRIVATE
+    vortex_core
 )
 

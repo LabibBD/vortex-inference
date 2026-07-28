@@ -1,0 +1,15 @@
+
+NOTICE: Existing SQLite export found: /home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.sqlite
+        It is assumed file was previously exported from: /home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.nsys-rep
+        Consider using --force-export=true if needed.
+
+Processing [/home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.sqlite] with [/opt/nvidia/nsight-systems/2025.6.3/host-linux-x64/reports/cuda_gpu_kern_sum.py]... 
+Time (%),Total Time (ns),Instances,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+42.6,637302,366,1741.3,1632.0,1600,2305,245.4,"vortex::ops::<unnamed>::linear_3d_kernel(const float *, const float *, const float *, float *, int, int, int)"
+19.8,296849,122,2433.2,2432.0,2400,2528,29.6,"vortex::ops::<unnamed>::layernorm_kernel(const float *, const float *, const float *, float *, int, int, float)"
+11.1,165733,122,1358.5,1360.0,1184,1568,151.9,"vortex::ops::<unnamed>::batched_matmul_kernel(const float *, const float *, float *, int, int, int, int)"
+9.6,144072,61,2361.8,2368.0,2336,2432,20.1,"vortex::ops::<unnamed>::scaled_softmax_kernel(const float *, float *, float, int, int)"
+7.8,116002,122,950.8,960.0,928,992,17.2,"vortex::ops::<unnamed>::add_kernel(const float *, const float *, float *, unsigned long)"
+5.1,76291,61,1250.7,1248.0,1216,1281,17.9,"vortex::ops::<unnamed>::transpose_last_two_kernel(const float *, float *, unsigned long, unsigned long, unsigned long)"
+4.0,59747,61,979.5,992.0,960,1024,16.8,"vortex::ops::<unnamed>::gelu_kernel(const float *, float *, unsigned long)"
+

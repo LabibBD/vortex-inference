@@ -1,15 +1,48 @@
 #include "vortex/operators/attention.hpp"
 
 #include "vortex/operators/softmax.hpp"
+#include "vortex/operators/scaled_softmax.hpp"
 #include "vortex/operators/transformer.hpp"
 
 #include <cmath>
+#include <cstdlib>
+#include <cstring>
 #include <cstddef>
 #include <stdexcept>
 
 namespace vortex::ops {
 
 namespace {
+
+bool use_fused_scaled_softmax() noexcept {
+    static const bool enabled = []() {
+        const char* value =
+            std::getenv(
+                "VORTEX_ATTENTION_SOFTMAX_MODE"
+            );
+
+        if (value == nullptr) {
+            return true;
+        }
+
+        return !(
+            std::strcmp(
+                value,
+                "separate"
+            ) == 0 ||
+            std::strcmp(
+                value,
+                "legacy"
+            ) == 0 ||
+            std::strcmp(
+                value,
+                "0"
+            ) == 0
+        );
+    }();
+
+    return enabled;
+}
 
 void validate_attention(
     const Tensor& query,
@@ -182,17 +215,26 @@ void scaled_dot_product_attention(
             )
         );
 
-    // Safe in-place elementwise scaling.
-    scale(
-        scores,
-        scale_factor,
-        scores
-    );
+    if (
+        use_fused_scaled_softmax()
+    ) {
+        scaled_softmax(
+            scores,
+            scale_factor,
+            probabilities
+        );
+    } else {
+        scale(
+            scores,
+            scale_factor,
+            scores
+        );
 
-    softmax(
-        scores,
-        probabilities
-    );
+        softmax(
+            scores,
+            probabilities
+        );
+    }
 
     batched_matmul(
         probabilities,

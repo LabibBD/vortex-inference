@@ -1,0 +1,18 @@
+=================================
+ VORTEX Scaled-Softmax Benchmark
+=================================
+
+Shape: 128 x 64
+Separate mean: 0.007247 ms
+Fused mean:    0.005713 ms
+Speedup:       1.268606x
+
+Shape: 512 x 128
+Separate mean: 0.016066 ms
+Fused mean:    0.012069 ms
+Speedup:       1.331150x
+
+Shape: 1024 x 256
+Separate mean: 0.025236 ms
+Fused mean:    0.021345 ms
+Speedup:       1.182262x

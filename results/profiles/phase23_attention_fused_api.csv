@@ -1,0 +1,17 @@
+
+NOTICE: Existing SQLite export found: /home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.sqlite
+        It is assumed file was previously exported from: /home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.nsys-rep
+        Consider using --force-export=true if needed.
+
+Processing [/home/qmlabib/vortex-inference/results/profiles/phase23_attention_fused.sqlite] with [/opt/nvidia/nsight-systems/2025.6.3/host-linux-x64/reports/cuda_api_sum.py]... 
+Time (%),Total Time (ns),Num Calls,Avg (ns),Med (ns),Min (ns),Max (ns),StdDev (ns),Name
+97.0,86019209,27,3185896.6,1397.0,904,85978279,16546224.6,cudaMalloc
+2.1,1863837,915,2037.0,1795.0,1572,50954,2315.8,cudaLaunchKernel
+0.6,501231,61,8216.9,4304.0,3921,241218,30331.0,cudaDeviceSynchronize
+0.2,169365,6,28227.5,26345.0,16722,42167,11165.5,cuLibraryLoadData
+0.1,59162,18,3286.8,1867.0,1549,15086,4029.9,cudaMemcpy
+0.1,57555,915,62.9,58.0,51,3554,116.0,cuKernelGetName
+0.0,4273,27,158.3,57.0,54,2690,506.2,cudaFree
+0.0,3346,1,3346.0,3346.0,3346,3346,0.0,cuModuleGetLoadingMode
+0.0,1682,7,240.3,232.0,204,314,37.9,cuLibraryGetKernel
+

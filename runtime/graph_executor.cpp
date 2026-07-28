@@ -1,4 +1,5 @@
 #include "vortex/graph_executor.hpp"
+#include "vortex/cuda_check.hpp"
 
 #include "vortex/operators/activations.hpp"
 #include "vortex/operators/attention.hpp"
@@ -175,6 +176,11 @@ void GraphExecutor::run() {
             node
         );
     }
+
+    // All kernels in this executor currently use
+    // the same default CUDA stream. Stream ordering
+    // preserves dependencies; synchronize once here.
+    CUDA_EXECUTION_BOUNDARY_CHECK();
 }
 
 void GraphExecutor::release_dead_tensors(
