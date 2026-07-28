@@ -1,0 +1,12 @@
+=================================
+ VORTEX Dynamic INT8 Linear3D
+=================================
+
+Shape:                 21 x 31 x 29
+INT8 reference max:    4.76837e-07
+INT8 reference mean:   2.49595e-08
+Error vs FP32 max:     0.0361449
+Error vs FP32 mean:    0.00840333
+Repeat error:          0
+
+[VORTEX] Dynamic INT8 Linear3D PASSED

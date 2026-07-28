@@ -106,6 +106,7 @@ add_library(
     kernels/matmul_naive.cu
     kernels/matmul_tiled.cu
     kernels/linear.cu
+    kernels/int8_linear.cu
     kernels/fused_linear_gelu.cu
     kernels/layernorm.cu
     kernels/transformer_primitives.cu
@@ -740,5 +741,16 @@ target_link_libraries(
 add_test(
     NAME int8_linear
     COMMAND vortex_int8_linear_test
+)
+
+add_executable(
+    vortex_int8_linear_benchmark
+    benchmarks/int8_linear_benchmark.cpp
+)
+
+target_link_libraries(
+    vortex_int8_linear_benchmark
+    PRIVATE
+    vortex_core
 )
 

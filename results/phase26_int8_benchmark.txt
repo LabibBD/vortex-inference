@@ -1,0 +1,66 @@
+=================================
+ VORTEX FP32 vs Dynamic INT8
+=================================
+
+Shape: 64 x 32 x 32
+FP32 mean:             0.003392 ms
+FP32 median:           0.003120 ms
+FP32 P95:              0.004096 ms
+INT8 mean:             0.005682 ms
+INT8 median:           0.005920 ms
+INT8 P95:              0.006144 ms
+INT8 speedup:          0.596957x
+Maximum FP32 error:    0.040347
+Mean FP32 error:       0.006323
+FP32 weight storage:   4096 bytes
+INT8 weight storage:   1152 bytes
+Weight compression:    3.555556x
+INT8 workspace:        2304 bytes
+
+Shape: 64 x 32 x 64
+FP32 mean:             0.003412 ms
+FP32 median:           0.003072 ms
+FP32 P95:              0.004096 ms
+INT8 mean:             0.005778 ms
+INT8 median:           0.005952 ms
+INT8 P95:              0.006144 ms
+INT8 speedup:          0.590582x
+Maximum FP32 error:    0.041193
+Mean FP32 error:       0.006758
+FP32 weight storage:   8192 bytes
+INT8 weight storage:   2304 bytes
+Weight compression:    3.555556x
+INT8 workspace:        2304 bytes
+
+Shape: 64 x 64 x 32
+FP32 mean:             0.004103 ms
+FP32 median:           0.004096 ms
+FP32 P95:              0.004224 ms
+INT8 mean:             0.006571 ms
+INT8 median:           0.006400 ms
+INT8 P95:              0.007168 ms
+INT8 speedup:          0.624501x
+Maximum FP32 error:    0.048493
+Mean FP32 error:       0.010678
+FP32 weight storage:   8192 bytes
+INT8 weight storage:   2176 bytes
+Weight compression:    3.764706x
+INT8 workspace:        4352 bytes
+
+Shape: 256 x 128 x 128
+FP32 mean:             0.011860 ms
+FP32 median:           0.011760 ms
+FP32 P95:              0.012288 ms
+INT8 mean:             0.019463 ms
+INT8 median:           0.019456 ms
+INT8 P95:              0.019616 ms
+INT8 speedup:          0.609376x
+Maximum FP32 error:    0.090860
+Mean FP32 error:       0.016242
+FP32 weight storage:   65536 bytes
+INT8 weight storage:   16896 bytes
+Weight compression:    3.878788x
+INT8 workspace:        33792 bytes
+
+[VORTEX] Saved results/phase26_int8_benchmark.csv
+[VORTEX] INT8 benchmark PASSED
