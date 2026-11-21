@@ -60,6 +60,21 @@ Measured relative performance:
 
 These measurements apply only to the fixed small-transformer workload above. They are not a claim that VORTEX universally outperforms PyTorch.
 
+### RTX 5060 Ti / Blackwell validation (2026-11-21)
+
+On an NVIDIA RTX 5060 Ti with CUDA 12.8 and PyTorch 2.10.0+cu128,
+VORTEX compiled successfully, passed **30/30 C++/CUDA tests**, and
+completed a new benchmark on the same small FP32 transformer workload.
+The console-reported medians were **0.027391 ms (VORTEX)**,
+**0.139943 ms (PyTorch eager)**, and **0.080168 ms (compiled PyTorch)**,
+corresponding to **5.109×** and **2.927×** ratios of median latency.
+
+See the [RTX 5060 Ti lab benchmark report](docs/rtx5060ti_lab_benchmark_2026-11-21.md)
+for test conditions, warnings and explicit limitations. These are
+on-device, single-workload results; the full generated JSON/CSV artifacts
+remain on the lab workstation and have not yet been committed.
+
+
 ## Automated importer checks (CPU-only)
 
 The [ONNX importer CI workflow](.github/workflows/python-importer-ci.yml)
@@ -101,7 +116,11 @@ bash scripts/verify_gpu_release.sh
 VORTEX_CUDA_ARCHITECTURES=120 bash scripts/verify_gpu_release.sh
 ```
 
-The RTX 5060 Ti requires CUDA Toolkit 12.8+ for native `sm_120` compilation.\nThe lab GPU configuration uses the explicit `120` architecture value above;\nthe verification script otherwise requests CMake's `native` GPU detection.\n\nThe script captures the GPU/driver/toolchain information, builds the full C++17/CUDA
+The RTX 5060 Ti requires CUDA Toolkit 12.8+ for native `sm_120` compilation.
+The lab GPU configuration uses the explicit `120` architecture value above;
+the verification script otherwise requests CMake's `native` GPU detection.
+
+The script captures the GPU/driver/toolchain information, builds the full C++17/CUDA
 runtime, runs the CTest suite, and checks the bundled HELIOS verifier against
 its reference output. It writes logs to
 `results/local-gpu-verification/<UTC timestamp>/` without overwriting
