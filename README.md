@@ -49,7 +49,7 @@ Validated configuration:
 | Runtime | Median latency | P95 latency | Throughput |
 |---|---:|---:|---:|
 | VORTEX CUDA | **0.034802 ms** | **0.035364 ms** | **1,838,974.8 tokens/s** |
-| PyTorch CUDA eager | 0.106659 ms | 0.123902 ms | 600,943.1 tokens/s |
+| PyTorch CUDA eager | 0.106659 ms | 0.123902 ms | 600,043.1 tokens/s |
 | PyTorch CUDA compiled | 0.084890 ms | 0.091173 ms | 753,916.8 tokens/s |
 
 Measured relative performance:
@@ -59,6 +59,36 @@ Measured relative performance:
 - Fused scaled-Softmax reduced the transformer from 16 to 15 CUDA kernels and reduced measured latency by **6.91%**
 
 These measurements apply only to the fixed small-transformer workload above. They are not a claim that VORTEX universally outperforms PyTorch.
+
+## Automated importer checks (CPU-only)
+
+The [ONNX importer CI workflow](.github/workflows/python-importer-ci.yml)
+runs on GitHub Actions with Python 3.11 and 3.12, **without a GPU**.
+It verifies:
+
+- A valid ONNX `Gemm` model passes compatibility checking and conversion.
+- Unsupported operator variants and missing Gemm bias inputs are rejected.
+- Incompatible LayerNorm epsilon is rejected instead of reporting a false positive.
+- Conversion preserves unrelated files in an existing output directory.
+- Bundled Phase-16 ONNX conversion still produces native model and weight files.
+- Arithmetic and workload metadata in the **archived** transformer benchmark are consistent.
+
+Run the same tests locally:
+
+```bash
+python -m pip install -r requirements-importer-ci.txt
+python -m unittest discover -s tests/python -p "test_*.py" -v
+python scripts/check_onnx_compat.py models/phase16_mlp.onnx
+```
+
+The compatibility checker now probes the actual converter in a temporary
+directory. Passing the check means **conversion works**, not that the model
+has been numerically validated on an NVIDIA GPU.
+
+**Important:** the CPU importer workflow does not compile CUDA, run the
+30 C++/CUDA tests, or reproduce measured GPU performance. Those require
+running CMake/CTest and benchmarks on a supported NVIDIA CUDA machine.
+The latency numbers below are archived measurements, not CI results.
 
 ## Build
 

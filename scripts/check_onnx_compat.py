@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import onnx
@@ -16,7 +18,6 @@ SUPPORTED_OPS = {
     "Gelu",
     "Softmax",
     "LayerNormalization",
-    "Identity",
 }
 
 SUPPORTED_DTYPES = {
@@ -278,8 +279,40 @@ def main() -> int:
             ),
         )
 
+        # A supported operator name alone is not enough: the
+        # converter imposes additional constraints on shape,
+        # optional inputs, constant weights, and attributes.
+        # Probe actual conversion in a disposable directory.
+        with tempfile.TemporaryDirectory(prefix="vortex-onnx-") as temp_dir:
+            converted = Path(temp_dir) / "model"
+            command = [
+                sys.executable,
+                str(Path(__file__).with_name("convert_onnx_to_vortex.py")),
+                str(args.model),
+                str(converted),
+            ]
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if result.returncode != 0:
+                detail = (result.stderr or result.stdout).strip()
+                raise CompatibilityError(
+                    "The converter rejected this model: "
+                    + (detail or f"exit status {result.returncode}")
+                )
+            if not (converted / "model.vtx").is_file() or not (
+                converted / "weights.bin"
+            ).is_file():
+                raise CompatibilityError(
+                    "Converter did not produce the required model artifacts"
+                )
+
         print(
-            "\n[VORTEX] ONNX model is COMPATIBLE"
+            "\n[VORTEX] ONNX model is CONVERTIBLE "
+            "(GPU execution not verified)"
         )
 
         return 0

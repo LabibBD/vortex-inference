@@ -1,0 +1,4 @@
+# Lightweight, CPU-only validation dependencies. Full CUDA and PyTorch
+# benchmarking remains a separate GPU-machine workflow.
+numpy>=1.26,<3
+onnx>=1.16,<2
