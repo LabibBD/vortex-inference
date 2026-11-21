@@ -1,3 +1,5 @@
+Internal ctest changing into directory: /home/labibagas/kicking/vortex-inference/build
+Test project /home/labibagas/kicking/vortex-inference/build
       Start  1: tensor
  1/30 Test  #1: tensor ...........................   Passed    0.29 sec
       Start  2: device_buffer
