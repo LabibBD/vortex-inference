@@ -35,3 +35,6 @@ Thumbs.db
 /build/
 /.venv/
 *.sqlite
+
+# Machine-specific verification logs
+results/local-gpu-verification/
