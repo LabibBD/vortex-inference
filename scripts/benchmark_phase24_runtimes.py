@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -17,6 +18,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as functional
+
+from benchmark_artifacts import create_output_directory, get_provenance
 
 
 BATCH = 4
@@ -647,6 +650,17 @@ def format_optional(
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Benchmark VORTEX against PyTorch without overwriting archives."
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="New, non-existing output directory (otherwise auto-create unique run).",
+    )
+    args = parser.parse_args()
+
     if not torch.cuda.is_available():
         raise RuntimeError(
             "PyTorch CUDA is unavailable"
@@ -657,6 +671,13 @@ def main() -> None:
             f"Missing VORTEX executable: "
             f"{VORTEX_EXECUTABLE}"
         )
+
+    provenance = get_provenance(torch, ROOT)
+    results_directory = create_output_directory(
+        args.output_dir, ROOT / "results", provenance["gpu_name"]
+    )
+    print(f"[VORTEX] GPU: {provenance['gpu_name']}")
+    print(f"[VORTEX] Results directory: {results_directory}")
 
     torch.manual_seed(2401)
 
@@ -853,7 +874,24 @@ def main() -> None:
             vortex["median_ms"]
         )
 
+    # Do not publish a timing comparison for numerically invalid output.
+    tolerance = 1e-4
+    measured = {
+        "vortex_cuda": vortex,
+        "pytorch_cuda_eager": eager,
+    }
+    if compiled.get("status") == "available":
+        measured["pytorch_cuda_compiled"] = compiled
+    for name, run in measured.items():
+        if float(run["max_error"]) > tolerance:
+            raise RuntimeError(
+                f"{name} exceeds numerical tolerance {tolerance:g}: "
+                f"{run['max_error']}"
+            )
+
     results = {
+        "provenance": provenance,
+        "numerical_tolerance": tolerance,
         "configuration": {
             "batch": BATCH,
             "tokens": TOKENS,
@@ -877,26 +915,6 @@ def main() -> None:
         },
     }
 
-    results_directory = (
-        ROOT /
-        "results"
-    )
-
-    docs_directory = (
-        ROOT /
-        "docs"
-    )
-
-    results_directory.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    docs_directory.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
     json_path = (
         results_directory /
         "phase24_runtime_comparison.json"
@@ -908,7 +926,7 @@ def main() -> None:
     )
 
     markdown_path = (
-        docs_directory /
+        results_directory /
         "phase24_runtime_comparison.md"
     )
 
@@ -1083,7 +1101,13 @@ def main() -> None:
 
 ## Configuration
 
-- GPU: NVIDIA GeForce RTX 4060 Laptop GPU
+- GPU: {provenance['gpu_name']}
+- GPU compute capability: {provenance['gpu_compute_capability']}
+- NVIDIA driver: {provenance['nvidia_driver']}
+- PyTorch version: {provenance['pytorch_version']}
+- PyTorch CUDA version: {provenance['pytorch_cuda_version']}
+- VORTEX Git commit: {provenance['git_commit']}
+- UTC date/time: {provenance['utc_timestamp']}
 - Precision: FP32
 - TF32: disabled
 - Batch: {BATCH}
@@ -1183,15 +1207,15 @@ inference.
     )
 
     print(
-        f"  {json_path.relative_to(ROOT)}"
+        f"  {json_path}"
     )
 
     print(
-        f"  {csv_path.relative_to(ROOT)}"
+        f"  {csv_path}"
     )
 
     print(
-        f"  {markdown_path.relative_to(ROOT)}"
+        f"  {markdown_path}"
     )
 
 
