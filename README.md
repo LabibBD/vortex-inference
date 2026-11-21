@@ -71,8 +71,11 @@ corresponding to **5.109×** and **2.927×** ratios of median latency.
 
 See the [RTX 5060 Ti lab benchmark report](docs/rtx5060ti_lab_benchmark_2026-11-21.md)
 for test conditions, warnings and explicit limitations. These are
-on-device, single-workload results; the full generated JSON/CSV artifacts
-remain on the lab workstation and have not yet been committed.
+on-device, single-workload results. The benchmark
+[JSON](results/rtx5060ti_2026-11-21/phase24_runtime_comparison.json),
+[CSV](results/rtx5060ti_2026-11-21/phase24_runtime_comparison.csv), and
+[GPU test logs](results/rtx5060ti_2026-11-21/ctest_summary.log) are archived
+for independent inspection.
 
 
 ## Automated importer checks (CPU-only)
