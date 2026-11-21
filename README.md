@@ -96,9 +96,12 @@ When you have access to a CUDA-capable machine, run:
 
 ```bash
 bash scripts/verify_gpu_release.sh
+
+# For an NVIDIA GeForce RTX 5060 Ti (Blackwell, sm_120):
+VORTEX_CUDA_ARCHITECTURES=120 bash scripts/verify_gpu_release.sh
 ```
 
-The script captures the GPU/driver/toolchain information, builds the full C++17/CUDA
+The RTX 5060 Ti requires CUDA Toolkit 12.8+ for native `sm_120` compilation.\nThe lab GPU configuration uses the explicit `120` architecture value above;\nthe verification script otherwise requests CMake's `native` GPU detection.\n\nThe script captures the GPU/driver/toolchain information, builds the full C++17/CUDA
 runtime, runs the CTest suite, and checks the bundled HELIOS verifier against
 its reference output. It writes logs to
 `results/local-gpu-verification/<UTC timestamp>/` without overwriting
