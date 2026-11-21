@@ -140,7 +140,7 @@ benchmark results.
 To select a **new** custom directory:
 
 ```bash
-python scripts/benchmark_phase24_runtimes.py \\
+python scripts/benchmark_phase24_runtimes.py \
   --output-dir results/gpu-benchmarks/my-lab-run
 ```
 
