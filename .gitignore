@@ -38,3 +38,6 @@ Thumbs.db
 
 # Machine-specific verification logs
 results/local-gpu-verification/
+
+# Fresh GPU benchmark experiments (archived Phase 24 metrics remain tracked)
+results/gpu-benchmarks/
