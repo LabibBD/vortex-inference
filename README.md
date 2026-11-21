@@ -118,6 +118,38 @@ aggregations. These fields should not be interpreted as moments of one common
 sample distribution. The reported headline speedups are ratios of median
 latencies for this fixed workload; do not generalize them to other models.
 
+## Fresh GPU benchmarks (preserve archived measurements)
+
+The saved RTX 4060 results under `results/phase24_runtime_comparison.*`
+are historical measurements. To run a **new, separate** comparison on
+another GPU (for example, RTX 5060 Ti), first verify that PyTorch can run
+CUDA workloads, then install NumPy and run from the repository root:
+
+```bash
+python -m pip install numpy
+python scripts/benchmark_phase24_runtimes.py
+```
+
+The script creates a unique directory under `results/gpu-benchmarks/`
+and saves three artifacts: JSON, CSV, and Markdown. It records the actual
+GPU name, compute capability, driver, PyTorch and CUDA versions, Git
+revision, timing configuration, and numerical error. It refuses to use
+an existing directory for `--output-dir`, protecting all previous
+benchmark results.
+
+To select a **new** custom directory:
+
+```bash
+python scripts/benchmark_phase24_runtimes.py \\
+  --output-dir results/gpu-benchmarks/my-lab-run
+```
+
+The optional `torch.compile` baseline may be skipped if compilation fails;
+the JSON explicitly records that status. Avoid other GPU jobs while timing,
+and compare results only at matched workload/precision/synchronization.
+The benchmark uses a small, fixed transformer block and does **not**
+imply VORTEX is universally faster than PyTorch.
+
 ## Build
 
 ```bash
