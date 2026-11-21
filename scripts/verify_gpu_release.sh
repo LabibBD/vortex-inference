@@ -13,7 +13,7 @@ bundled HELIOS verifier against its saved reference output.
 
 Requires: NVIDIA GPU and driver, CUDA toolkit (nvcc), CMake, C++ compiler.
 Default evidence directory: results/local-gpu-verification/<UTC timestamp>
-Benchmark performance is NOT measured by this script.
+Set VORTEX_CUDA_ARCHITECTURES=120 for a GeForce RTX 5060 Ti, or leave it\nunset to build for the native NVIDIA GPU (CMake 3.24+).\nBenchmark performance is NOT measured by this script.
 HELP
 }
 
@@ -61,6 +61,7 @@ echo "[VORTEX] Evidence directory: $REPORT_DIR"
 
 echo "[VORTEX] Configuring CUDA release build..."
 cmake -S "$ROOT" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_CUDA_ARCHITECTURES="${VORTEX_CUDA_ARCHITECTURES:-native}" \
   2>&1 | tee "$REPORT_DIR/configure.log"
 
 echo "[VORTEX] Building complete C++/CUDA suite..."
