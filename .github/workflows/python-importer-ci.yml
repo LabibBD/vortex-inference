@@ -1,0 +1,45 @@
+name: VORTEX Python importer validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  importer-contract:
+    name: ONNX import + benchmark audit (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-importer-ci.txt
+
+      - name: Install CPU-only importer dependencies
+        run: python -m pip install -r requirements-importer-ci.txt
+
+      - name: Compile Python source
+        run: python -m compileall -q scripts tests/python
+
+      - name: Run model-conversion contract and benchmark metadata tests
+        run: python -m unittest discover -s tests/python -p "test_*.py" -v
+
+      - name: Rebuild bundled ONNX smoke model
+        run: |
+          python scripts/check_onnx_compat.py models/phase16_mlp.onnx
+          python scripts/convert_onnx_to_vortex.py \
+            models/phase16_mlp.onnx "${RUNNER_TEMP}/vortex-phase16"
+          test -s "${RUNNER_TEMP}/vortex-phase16/model.vtx"
+          test -s "${RUNNER_TEMP}/vortex-phase16/weights.bin"
