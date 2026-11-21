@@ -1,0 +1,17 @@
+{
+  "prediction": "FAILURE",
+  "class_index": 1,
+  "confidence": 0.34868369,
+  "latency_ms": 0.29549400,
+  "backend": "VORTEX CUDA",
+  "probabilities": {
+    "SUCCESS": 0.32583141,
+    "FAILURE": 0.34868369,
+    "UNCERTAIN": 0.32548484
+  },
+  "validation": {
+    "max_abs_error": 0.00000003,
+    "tolerance": 0.00010000,
+    "passed": true
+  }
+}

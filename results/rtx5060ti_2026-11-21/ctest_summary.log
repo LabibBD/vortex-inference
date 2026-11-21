@@ -1,0 +1,66 @@
+Internal ctest changing into directory: /home/labibagas/kicking/vortex-inference/build
+Test project /home/labibagas/kicking/vortex-inference/build
+      Start  1: tensor
+ 1/30 Test  #1: tensor ...........................   Passed    0.29 sec
+      Start  2: device_buffer
+ 2/30 Test  #2: device_buffer ....................   Passed    0.22 sec
+      Start  3: elementwise
+ 3/30 Test  #3: elementwise ......................   Passed    0.28 sec
+      Start  4: activations
+ 4/30 Test  #4: activations ......................   Passed    0.25 sec
+      Start  5: reductions
+ 5/30 Test  #5: reductions .......................   Passed    0.21 sec
+      Start  6: softmax
+ 6/30 Test  #6: softmax ..........................   Passed    0.22 sec
+      Start  7: matmul
+ 7/30 Test  #7: matmul ...........................   Passed    0.35 sec
+      Start  8: linear
+ 8/30 Test  #8: linear ...........................   Passed    0.21 sec
+      Start  9: layernorm
+ 9/30 Test  #9: layernorm ........................   Passed    0.20 sec
+      Start 10: fp16
+10/30 Test #10: fp16 .............................   Passed    0.20 sec
+      Start 11: fp16_activations
+11/30 Test #11: fp16_activations .................   Passed    0.21 sec
+      Start 12: fp16_matmul
+12/30 Test #12: fp16_matmul ......................   Passed    0.27 sec
+      Start 13: memory_pool
+13/30 Test #13: memory_pool ......................   Passed    0.21 sec
+      Start 14: memory_pool_integration
+14/30 Test #14: memory_pool_integration ..........   Passed    0.19 sec
+      Start 15: graph
+15/30 Test #15: graph ............................   Passed    0.00 sec
+      Start 16: graph_executor
+16/30 Test #16: graph_executor ...................   Passed    0.20 sec
+      Start 17: lifetime
+17/30 Test #17: lifetime .........................   Passed    0.19 sec
+      Start 18: fusion
+18/30 Test #18: fusion ...........................   Passed    0.19 sec
+      Start 19: graph_fusion
+19/30 Test #19: graph_fusion .....................   Passed    0.21 sec
+      Start 20: cuda_stream
+20/30 Test #20: cuda_stream ......................   Passed    0.22 sec
+      Start 21: cuda_graph
+21/30 Test #21: cuda_graph .......................   Passed    0.25 sec
+      Start 22: model_loader
+22/30 Test #22: model_loader .....................   Passed    0.20 sec
+      Start 23: transformer_primitives
+23/30 Test #23: transformer_primitives ...........   Passed    0.21 sec
+      Start 24: self_attention
+24/30 Test #24: self_attention ...................   Passed    0.20 sec
+      Start 25: transformer_block
+25/30 Test #25: transformer_block ................   Passed    0.21 sec
+      Start 26: scaled_softmax
+26/30 Test #26: scaled_softmax ...................   Passed    0.19 sec
+      Start 27: numerical_validation
+27/30 Test #27: numerical_validation .............   Passed    0.20 sec
+      Start 28: randomized_transformer
+28/30 Test #28: randomized_transformer ...........   Passed    0.22 sec
+      Start 29: int8_linear
+29/30 Test #29: int8_linear ......................   Passed    0.20 sec
+      Start 30: helios_verifier_integration
+30/30 Test #30: helios_verifier_integration ......   Passed    0.20 sec
+
+100% tests passed, 0 tests failed out of 30
+
+Total Test time (real) =   6.47 sec
