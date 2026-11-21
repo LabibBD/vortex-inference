@@ -12,8 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CUDA_STANDARD 17)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
-# RTX 4060 Laptop GPU - Ada Lovelace, Compute Capability 8.9
-set(CMAKE_CUDA_ARCHITECTURES 89)
+# Default to the original RTX 4060 architecture, but allow callers to
+# override it (e.g. -DCMAKE_CUDA_ARCHITECTURES=120 for RTX 5060 Ti).
+if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+    set(CMAKE_CUDA_ARCHITECTURES 89)
+endif()
 
 add_executable(
     vortex_cuda_check
