@@ -38,6 +38,9 @@ jobs:
       - name: Compile Python source
         run: python -m compileall -q scripts tests/python
 
+      - name: Verify benchmark output safety helpers
+        run: python -m unittest discover -s tests/python -p "test_benchmark_artifacts.py" -v
+
       - name: Run model-conversion contract and benchmark metadata tests
         run: python -m unittest discover -s tests/python -p "test_*.py" -v
 
