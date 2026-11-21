@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import shutil
 import struct
 from collections import OrderedDict
 from pathlib import Path
@@ -379,7 +378,6 @@ def main() -> int:
             "Gelu",
             "Softmax",
             "LayerNormalization",
-            "Identity",
         }:
             converted_op = {
                 "MatMul": "MatMul",
@@ -389,7 +387,6 @@ def main() -> int:
                 "Softmax": "Softmax",
                 "LayerNormalization":
                     "LayerNorm",
-                "Identity": "Identity",
             }[op]
 
             if op == "Softmax":
@@ -508,13 +505,12 @@ def main() -> int:
 
     output_dir = args.output
 
-    if output_dir.exists():
-        if output_dir.is_dir():
-            shutil.rmtree(
-                output_dir
-            )
-        else:
-            output_dir.unlink()
+    # Rewriting the two owned artifacts must not delete a user's
+    # pre-existing directory or unrelated files in that directory.
+    if output_dir.exists() and not output_dir.is_dir():
+        raise ConversionError(
+            f"Output path exists and is not a directory: {output_dir}"
+        )
 
     output_dir.mkdir(
         parents=True,
