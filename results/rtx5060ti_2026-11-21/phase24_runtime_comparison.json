@@ -1,0 +1,80 @@
+{
+  "provenance": {
+    "utc_timestamp": "2026-11-21T03:38:11.159074+00:00",
+    "gpu_name": "NVIDIA GeForce RTX 5060 Ti",
+    "gpu_compute_capability": [
+      12,
+      0
+    ],
+    "gpu_vram_gib": 7.519,
+    "nvidia_driver": "595.99.02",
+    "pytorch_version": "2.10.0+cu128",
+    "pytorch_cuda_version": "12.8",
+    "python_version": "3.11.18",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "git_commit": "375ec683e267cc4a4f8777e4eea4a48d1d87d426",
+    "synchronization": "synchronized end-to-end",
+    "source": "new local GPU measurement, not archived Phase 24 values"
+  },
+  "numerical_tolerance": 0.0001,
+  "configuration": {
+    "batch": 4,
+    "tokens": 16,
+    "model_dimension": 32,
+    "feed_forward_dimension": 64,
+    "precision": "FP32",
+    "warmup": 100,
+    "iterations_per_repeat": 1000,
+    "outer_repeats": 7,
+    "tf32_enabled": false
+  },
+  "runtimes": {
+    "vortex_cuda": {
+      "mean_ms": 0.027551,
+      "median_ms": 0.027391,
+      "p95_ms": 0.028667,
+      "minimum_ms": 0.027263,
+      "maximum_ms": 0.027496,
+      "stdev_ms": 8.426319311707675e-05,
+      "peak_managed_mib": 0.096191,
+      "max_error": 1e-06,
+      "mean_error": 0.0,
+      "sequences_per_second": 146033.36862473076,
+      "tokens_per_second": 2336533.897995692,
+      "speedup_vs_pytorch_eager": 5.109105180533752
+    },
+    "pytorch_cuda_eager": {
+      "mean_ms": 0.14113506471428572,
+      "median_ms": 0.1399435,
+      "p95_ms": 0.14637825000000002,
+      "minimum_ms": 0.135156,
+      "maximum_ms": 0.234349,
+      "stdev_ms": 0.004076140665987399,
+      "peak_allocated_mib": 9.271484375,
+      "peak_reserved_mib": 22.0,
+      "max_error": 8.344650268554688e-07,
+      "mean_error": 1.2406087535055121e-07,
+      "sequences_per_second": 28582.963838977874,
+      "tokens_per_second": 457327.421423646,
+      "speedup_vs_pytorch_eager": 1.0
+    },
+    "pytorch_cuda_compiled": {
+      "mean_ms": 0.08042380285714286,
+      "median_ms": 0.080168,
+      "p95_ms": 0.08292754999999999,
+      "minimum_ms": 0.076705,
+      "maximum_ms": 0.185021,
+      "stdev_ms": 0.0026236835352838293,
+      "peak_allocated_mib": 0.044921875,
+      "peak_reserved_mib": 58.0,
+      "max_error": 9.5367431640625e-07,
+      "mean_error": 1.2071234323229874e-07,
+      "sequences_per_second": 49895.220037920364,
+      "tokens_per_second": 798323.5206067258,
+      "compile_seconds": 3.7303325029997723,
+      "status": "available",
+      "speedup_vs_pytorch_eager": 1.7456279313441772,
+      "vortex_speedup_vs_compiled": 2.926800773976854
+    }
+  }
+}
