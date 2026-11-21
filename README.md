@@ -90,6 +90,31 @@ has been numerically validated on an NVIDIA GPU.
 running CMake/CTest and benchmarks on a supported NVIDIA CUDA machine.
 The latency numbers below are archived measurements, not CI results.
 
+## GPU release verification (on an NVIDIA machine)
+
+When you have access to a CUDA-capable machine, run:
+
+```bash
+bash scripts/verify_gpu_release.sh
+```
+
+The script captures the GPU/driver/toolchain information, builds the full C++17/CUDA
+runtime, runs the CTest suite, and checks the bundled HELIOS verifier against
+its reference output. It writes logs to
+`results/local-gpu-verification/<UTC timestamp>/` without overwriting
+the archived benchmark results.
+
+This release check does **not** measure GPU performance. The separate Phase 24
+benchmark and its saved numbers should only be compared with a fresh run made
+under the same workload, GPU model, timing, and synchronization settings.
+
+**Benchmark note:** For the saved Phase 24 results, VORTEX's
+`minimum_ms` and `maximum_ms` were derived from the range of per-repeat
+median latencies, while its `mean_ms` and `p95_ms` use different
+aggregations. These fields should not be interpreted as moments of one common
+sample distribution. The reported headline speedups are ratios of median
+latencies for this fixed workload; do not generalize them to other models.
+
 ## Build
 
 ```bash

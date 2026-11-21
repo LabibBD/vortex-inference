@@ -30,6 +30,11 @@ jobs:
       - name: Install CPU-only importer dependencies
         run: python -m pip install -r requirements-importer-ci.txt
 
+      - name: Validate GPU release script without requiring GPU
+        run: |
+          bash -n scripts/verify_gpu_release.sh
+          bash scripts/verify_gpu_release.sh --help
+
       - name: Compile Python source
         run: python -m compileall -q scripts tests/python
 
